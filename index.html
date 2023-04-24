@@ -8,14 +8,25 @@
     <link rel="stylesheet" type="text/css" href="./pico.css">
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <p>Current theme source: <strong id="theme-source">System</strong></p>
+    <main class="container">
+        <article>
+            <h2>First task</h2>
+            <input type="text" name="APIKey" id="APIKey" placeholder="APIKey">
+            <input type="text" name="taskName" id="taskName" placeholder="taskName" value="helloapi">
+            <button id="takeFirstTask">Take first task</button>
+            <div id="taskResult"></div>
+        </article>
+        <article>
+            <h2>Hello World!</h2>
+            <p>Current theme source: <strong id="theme-source">System</strong></p>
 
-    <button id="toggle-dark-mode">Toggle Dark Mode</button>
-    <button id="reset-to-system">Reset to System Theme</button>
+            <button id="toggle-dark-mode">Toggle Dark Mode</button>
+            <button id="reset-to-system">Reset to System Theme</button>
 
-    <p id="info"></p>
-
+            <p id="info"></p>
+        </article>
+    </main>
     <script src="renderer.js"></script>
+    <script src="js/tasks-first.js"></script>
 </body>
 </html>
