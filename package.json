@@ -1,0 +1,14 @@
+{
+  "name": "assistant",
+  "version": "1.0.0",
+  "description": "Dre-assistant",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pawel Dulak",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^24.1.2"
+  }
+}
