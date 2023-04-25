@@ -53,7 +53,11 @@ function testSpanish(destination) {
             'model': OPENAI_MODEL,
             'messages': [
                 {'role': 'user', 'content': userContent},
-                {'role': 'system', 'content': 'Jesteś nauczycielem hiszpańskiego. Użytkownik to twój uczeń. Jest na poziomie A1 - zaczyna naukę. Konstruuj przykłady w bardzo prosty sposób'}
+                {'role': 'system', 'content': '' +
+                        'Jesteś nauczycielem hiszpańskiego. ' +
+                        'Użytkownik to twój uczeń. Jest na poziomie A1 - zaczyna naukę. ' +
+                        'Konstruuj przykłady w bardzo prosty sposób. ' +
+                        'Nie dodawaj na końcu pytania o to czy uczeń zrozumiał, ani powitania na początku.'}
             ]
         })
     })
