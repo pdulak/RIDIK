@@ -19,6 +19,7 @@ function getModels(destination) {
 }
 
 function testCompletion(destination) {
+    const userContent = document.getElementById('openai-prompt').value;
     fetch(`${OPENAI_URL}v1/chat/completions`, {
         method: 'POST',
         headers: {
@@ -27,8 +28,8 @@ function testCompletion(destination) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            "model": OPENAI_MODEL,
-            "messages": [{"role": "user", "content": "Hello!"}]
+            'model': OPENAI_MODEL,
+            'messages': [{'role': 'user', 'content': userContent}]
         })
     })
         .then(response => response.json())
