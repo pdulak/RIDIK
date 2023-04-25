@@ -1,4 +1,5 @@
 const mainURL = 'https://url-to-zadania-api/';
+document.getElementById('APIKey').value = (config.config.zadaniaApiKey?config.config.zadaniaApiKey:"")
 
 document.getElementById('takeFirstTask').addEventListener('click', async () => {
     const APIKey = document.getElementById('APIKey').value;
