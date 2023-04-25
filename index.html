@@ -49,7 +49,12 @@
             <a href="#" role="button" onclick="testSpanish('openai-results')">Hiszpański A1</a>
             <a href="#" role="button" onclick="document.getElementById('openai-prompt').value = ''" class="secondary outline">Reset field</a>
 
-            <p id="openai-results"></p>
+            <article id="openai-results"></article>
+
+            <details>
+                <summary>Debug</summary>
+                <p id="openai-results-debug"></p>
+            </details>
             <script src="js/openai.js"></script>
         </section>
     </main>
