@@ -15,10 +15,10 @@ document.getElementById('reset-to-system').addEventListener('click', async () =>
 const navLinks = document.querySelectorAll('nav a')
 
 navLinks.forEach((link) => {
-    link.addEventListener('click', handleClick);
+    link.addEventListener('click', handleNavClick);
 });
 
-function handleClick(event) {
+function handleNavClick(event) {
     event.preventDefault();
     const sectionId = event.target.getAttribute('data-section');
     const sectionElement = document.getElementById(sectionId);
