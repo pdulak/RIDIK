@@ -39,3 +39,28 @@ function testCompletion(destination) {
         })
         .catch(error => console.error(error));
 }
+
+function testSpanish(destination) {
+    const userContent = document.getElementById('openai-prompt').value;
+    fetch(`${OPENAI_URL}v1/chat/completions`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${OPENAI_API_KEY}`,
+            'OpenAI-Organization': OPENAI_ORGANIZATION,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            'model': OPENAI_MODEL,
+            'messages': [
+                {'role': 'user', 'content': userContent},
+                {'role': 'system', 'content': 'Jesteś nauczycielem hiszpańskiego. Użytkownik to twój uczeń. Jest na poziomie A1 - zaczyna naukę. Konstruuj przykłady w bardzo prosty sposób'}
+            ]
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            document.getElementById(destination).innerHTML = JSON.stringify(data)
+        })
+        .catch(error => console.error(error));
+}
