@@ -42,6 +42,11 @@
         </section>
         <section id="secondary" class="dynamic-section" style="display: none">
             <h3>Secondary</h3>
+            <a href="#" role="button" onclick="getModels('openai-results'); return false">Get Models</a>
+            <a href="#" role="button" onclick="testCompletion('openai-results')">testCompletion</a>
+
+            <p id="openai-results"></p>
+            <script src="js/openai.js"></script>
         </section>
     </main>
     <script src="renderer.js"></script>
