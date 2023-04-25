@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^24.1.2"
+  },
+  "dependencies": {
+    "openai": "^3.2.1"
   }
 }
