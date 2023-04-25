@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Hello World!</title>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-    <link rel="stylesheet" type="text/css" href="./styles.css">
-    <link rel="stylesheet" type="text/css" href="./pico.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="css/pico.css">
 </head>
 <body>
     <main class="container">
@@ -16,11 +16,11 @@
                 </ul>
                 <ul>
                     <li><a href="#" data-section="main" >Main</a></li>
-                    <li><a href="#" data-section="secondary" >Secondary</a></li>
+                    <li><a href="#" data-section="openai" >OpenAI tests</a></li>
                 </ul>
             </nav>
         </section>
-        <section id="main" class="dynamic-section">
+        <section id="main" class="dynamic-section" style="display: none">
             <details>
                 <summary>First task</summary>
                 <label for="APIKey">API Key</label>
@@ -40,19 +40,24 @@
                 <p id="info"></p>
             </details>
         </section>
-        <section id="secondary" class="dynamic-section" style="display: none">
-            <h3>Secondary</h3>
+        <section id="openai" class="dynamic-section">
+            <h3>OpenAI tests</h3>
             <label for="openai-prompt">Prompt of User:</label>
             <input name="openai-prompt" id="openai-prompt" value="Hello!" placeholder="Place user prompt here">
             <a href="#" role="button" onclick="getModels('openai-results'); return false">Get Models</a>
-            <a href="#" role="button" onclick="testCompletion('openai-results')">testCompletion</a>
-            <a href="#" role="button" onclick="testSpanish('openai-results')">Hiszpański</a>
+            <a href="#" role="button" onclick="testCompletion('openai-results')">Test Completion</a>
+            <a href="#" role="button" onclick="testSpanish('openai-results')">Hiszpański A1</a>
+            <a href="#" role="button" onclick="document.getElementById('openai-prompt').value = ''" class="secondary outline">Reset field</a>
 
             <p id="openai-results"></p>
             <script src="js/openai.js"></script>
         </section>
     </main>
+    <div id="loader-background">
+        <div id="loader"></div>
+    </div>
     <script src="renderer.js"></script>
     <script src="js/tasks-first.js"></script>
+    <script src="js/tools.js"></script>
 </body>
 </html>

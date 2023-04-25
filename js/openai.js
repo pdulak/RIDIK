@@ -4,6 +4,10 @@ const OPENAI_URL = 'https://api.openai.com/'
 const OPENAI_MODEL = 'gpt-3.5-turbo'
 
 function getModels(destination) {
+    const destElement = document.getElementById(destination);
+    destElement.innerHTML = '';
+    destElement.ariaBusy = 'true';
+
     fetch(`${OPENAI_URL}v1/models`, {
         method: 'GET',
         headers: {
@@ -14,12 +18,17 @@ function getModels(destination) {
         .then(response => response.json())
         .then(data => {
             document.getElementById(destination).innerHTML = JSON.stringify(data);
+            destElement.ariaBusy = 'false';
         })
         .catch(error => console.error('Error:', error));
 }
 
 function testCompletion(destination) {
     const userContent = document.getElementById('openai-prompt').value;
+    const destElement = document.getElementById(destination);
+    destElement.innerHTML = '';
+    destElement.ariaBusy = 'true';
+
     fetch(`${OPENAI_URL}v1/chat/completions`, {
         method: 'POST',
         headers: {
@@ -34,14 +43,18 @@ function testCompletion(destination) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-            document.getElementById(destination).innerHTML = JSON.stringify(data)
+            document.getElementById(destination).innerHTML = JSON.stringify(data);
+            destElement.ariaBusy = 'false';
         })
         .catch(error => console.error(error));
 }
 
 function testSpanish(destination) {
     const userContent = document.getElementById('openai-prompt').value;
+    const destElement = document.getElementById(destination);
+    destElement.innerHTML = '';
+    destElement.ariaBusy = 'true';
+
     fetch(`${OPENAI_URL}v1/chat/completions`, {
         method: 'POST',
         headers: {
@@ -63,8 +76,8 @@ function testSpanish(destination) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-            document.getElementById(destination).innerHTML = JSON.stringify(data)
+            destElement.innerHTML = JSON.stringify(data);
+            destElement.ariaBusy = 'false';
         })
         .catch(error => console.error(error));
 }
