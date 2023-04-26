@@ -88,3 +88,31 @@ function testSpanish(destination) {
         })
         .catch(error => console.error(error));
 }
+
+async function moderationAPI(textToModerate) {
+    try {
+        const response = await fetch(`${OPENAI_URL}v1/moderations`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                'OpenAI-Organization': OPENAI_ORGANIZATION,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'input': textToModerate
+            })
+        })
+
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('moderationAPI data: ', data)
+        return data;
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return null;
+    }
+}
