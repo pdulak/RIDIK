@@ -20,7 +20,13 @@
                 </ul>
             </nav>
         </section>
-        <section id="main" class="dynamic-section" style="display: none">
+        <section id="main" class="dynamic-section">
+            <details>
+                <summary>Moderation API</summary>
+                <button id="moderationApiTask">Execute moderation API task</button>
+                <div id="moderationResult"></div>
+                <script src="js/moderation.js"></script>
+            </details>
             <details>
                 <summary>First task</summary>
                 <label for="APIKey">API Key</label>
@@ -29,6 +35,7 @@
                 <input type="text" name="taskName" id="taskName" placeholder="taskName" value="helloapi">
                 <button id="takeFirstTask">Take first task</button>
                 <div id="taskResult"></div>
+                <script src="js/tasks-first.js"></script>
             </details>
             <details>
                 <summary>Hello World!</summary>
@@ -40,7 +47,7 @@
                 <p id="info"></p>
             </details>
         </section>
-        <section id="openai" class="dynamic-section">
+        <section id="openai" class="dynamic-section" style="display: none">
             <h3>OpenAI tests</h3>
             <label for="openai-prompt">Prompt of User:</label>
             <input name="openai-prompt" id="openai-prompt" value="Hello!" placeholder="Place user prompt here">
@@ -62,7 +69,6 @@
         <div id="loader"></div>
     </div>
     <script src="renderer.js"></script>
-    <script src="js/tasks-first.js"></script>
     <script src="js/tools.js"></script>
 </body>
 </html>
