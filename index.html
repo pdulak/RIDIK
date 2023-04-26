@@ -25,23 +25,16 @@
                 <summary>Inprompt</summary>
                 <button id="inpromptTask">Execute Inprompt task</button>
                 <div id="inpromptTaskResult"></div>
-                <script src="js/inprompt.js"></script>
             </details>
             <details>
                 <summary>Moderation API</summary>
-                <button id="moderationApiTask">Execute moderation API task</button>
+                <button id="moderationApiTask">Execute Moderation API task</button>
                 <div id="moderationResult"></div>
-                <script src="js/moderation.js"></script>
             </details>
             <details>
-                <summary>First task</summary>
-                <label for="APIKey">API Key</label>
-                <input type="text" name="APIKey" id="APIKey" placeholder="APIKey">
-                <label for="taskName">Task name</label>
-                <input type="text" name="taskName" id="taskName" placeholder="taskName" value="helloapi">
-                <button id="takeFirstTask">Take first task</button>
+                <summary>HelloAPI</summary>
+                <button id="takeFirstTask">Execute HelloAPI task</button>
                 <div id="taskResult"></div>
-                <script src="js/tasks-first.js"></script>
             </details>
             <details>
                 <summary>Hello World!</summary>
@@ -57,9 +50,9 @@
             <h3>OpenAI tests</h3>
             <label for="openai-prompt">Prompt of User:</label>
             <input name="openai-prompt" id="openai-prompt" value="Hello!" placeholder="Place user prompt here">
-            <a href="#" role="button" onclick="getModels('openai-results'); return false">Get Models</a>
-            <a href="#" role="button" onclick="testCompletion('openai-results')">Test Completion</a>
-            <a href="#" role="button" onclick="testSpanish('openai-results')">Hiszpański A1</a>
+            <a href="#" role="button" id="get-models" >Get Models</a>
+            <a href="#" role="button" id="test-completion" >Test Completion</a>
+            <a href="#" role="button" id="test-spanish" >Hiszpański A1</a>
             <a href="#" role="button" onclick="document.getElementById('openai-prompt').value = ''" class="secondary outline">Reset field</a>
 
             <article id="openai-results"></article>
@@ -68,13 +61,12 @@
                 <summary>Debug</summary>
                 <p id="openai-results-debug"></p>
             </details>
-            <script src="js/openai.js"></script>
         </section>
     </main>
     <div id="loader-background">
         <div id="loader"></div>
     </div>
     <script src="renderer.js"></script>
-    <script src="js/tools.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
