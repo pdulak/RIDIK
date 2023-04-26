@@ -116,3 +116,36 @@ async function moderationAPI(textToModerate) {
         return null;
     }
 }
+
+async function openai_completion(user, system) {
+    try {
+        const messages = [
+            {'role': 'user', 'content': user},
+            {'role': 'system', 'content': system}
+        ]
+        console.log('openai_completion messages: ', messages)
+        const response = await fetch(`${OPENAI_URL}v1/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                    'OpenAI-Organization': OPENAI_ORGANIZATION,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'model': OPENAI_MODEL,
+                    'messages': messages
+                })
+            })
+
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('openai_completion data: ', data)
+        return data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return null;
+    }
+}
