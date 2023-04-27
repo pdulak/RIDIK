@@ -11,10 +11,10 @@
     <div class="hero" data-theme="dark">
         <nav class="container-fluid">
             <ul>
-                <li><strong>RIDIK</strong><span id="brain"></span></li>
+                <li><strong id="my-name">RIDIK</strong><span id="brain"></span></li>
             </ul>
             <ul>
-                <li><a href="#" data-section="main" >Main</a></li>
+                <li><a href="#" data-section="main" >Main Tasks</a></li>
                 <li><a href="#" data-section="openai" >OpenAI tests</a></li>
             </ul>
         </nav>
@@ -36,15 +36,6 @@
                 <button id="takeFirstTask">Execute HelloAPI task</button>
                 <div id="taskResult"></div>
             </details>
-            <details>
-                <summary>Hello World!</summary>
-                <p>Current theme source: <strong id="theme-source">System</strong></p>
-
-                <button id="toggle-dark-mode">Toggle Dark Mode</button>
-                <button id="reset-to-system">Reset to System Theme</button>
-
-                <p id="info"></p>
-            </details>
         </section>
         <section id="openai" class="dynamic-section" style="display: none">
             <h3>OpenAI tests</h3>
@@ -52,7 +43,7 @@
             <input name="openai-prompt" id="openai-prompt" value="Hello!" placeholder="Place user prompt here">
             <a href="#" role="button" id="get-models" >Get Models</a>
             <a href="#" role="button" id="test-completion" >Test Completion</a>
-            <a href="#" role="button" id="test-spanish" >Hiszpański A1</a>
+            <a href="#" role="button" id="test-spanish" >Spanish</a>
             <a href="#" role="button" onclick="document.getElementById('openai-prompt').value = ''" class="secondary outline">Reset field</a>
 
             <article id="openai-results"></article>
