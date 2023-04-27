@@ -1,3 +1,12 @@
 ## Installation
 1. `npm i`
 2. copy `config-sample.json` to `config.json` and fill with proper keys
+3. `npm start`
+
+## Todo
+- [ ] move requests to OpenAI to Main Process and communicate through IPC
+- [ ] move requests to Zadania to Main Process and communicate through IPC
+- [ ] use framework such as React or SolidJS
+- [ ] "general" panel with predefined tasks that are quickly switched using keyboard shourtuct
+- [ ] better way of toggling between dark and light mode
+- [ ] add icon 
