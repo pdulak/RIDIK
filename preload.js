@@ -16,6 +16,4 @@ contextBridge.exposeInMainWorld("darkMode", {
     system: () => ipcRenderer.invoke("dark-mode:system")
 })
 
-contextBridge.exposeInMainWorld("config", {
-    config : config
-});
+contextBridge.exposeInMainWorld("config", config);

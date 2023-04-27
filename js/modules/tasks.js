@@ -1,5 +1,5 @@
 const tasksConfig = {
-    apiKey : (config.config.zadaniaApiKey?config.config.zadaniaApiKey:""),
+    apiKey : (config.zadaniaApiKey?config.zadaniaApiKey:""),
     token : "",
     url : "https://url-to-zadania-api/"
 }

@@ -1,7 +1,7 @@
 import {moderationAPI, initialize, openai_completion} from "./modules/openai.js";
 import { tasksGetTokenAndTaskData, tasksSendAnswer } from "./modules/tasks.js";
 
-initialize(config.config.openaiApiKey, config.config.openaiOrganizationID);
+initialize(config.openaiApiKey, config.openaiOrganizationID);
 
 export const helloapi = async () => {
     const data = await tasksGetTokenAndTaskData("helloapi")
