@@ -96,7 +96,7 @@ export const testSpanish = (destination) => {
         .catch(error => console.error(error));
 }
 
-export async function moderationAPI(textToModerate) {
+export const moderationAPI = async (textToModerate) => {
     try {
         const response = await fetch(`${openaiConfig.url}v1/moderations`, {
             method: "POST",
@@ -124,7 +124,7 @@ export async function moderationAPI(textToModerate) {
     }
 }
 
-export async function openai_completion(user, system) {
+export const openai_completion = async (user, system) => {
     try {
         const messages = [
             {"role": "user", "content": user},
@@ -156,3 +156,4 @@ export async function openai_completion(user, system) {
         return null;
     }
 }
+
