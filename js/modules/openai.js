@@ -30,130 +30,74 @@ export const getModels = (destination) => {
         .catch(error => console.error("Error:", error));
 }
 
-export const testCompletion = (destination) => {
+export const testCompletion = async (destination) => {
     const userContent = document.getElementById("openai-prompt").value;
     const destinationElement = document.getElementById(destination);
-    const destinationDebug = document.getElementById(destination + "-debug");
     destinationElement.innerHTML = "";
     destinationElement.ariaBusy = "true";
 
-    fetch(`${openaiConfig.url}v1/chat/completions`, {
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${openaiConfig.apiKey}`,
-            "OpenAI-Organization": openaiConfig.organization,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            "model": openaiConfig.model,
-            "messages": [{"role": "user", "content": userContent}]
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            destinationElement.innerHTML = data.choices[0].message.content.split("\n").join("<br />");
-            destinationElement.ariaBusy = "false";
-            if (destinationDebug) {
-                destinationDebug.innerHTML = JSON.stringify(data);
-            }
-        })
-        .catch(error => console.error(error));
+    const data = await openai_completion(userContent);
+
+    destinationElement.innerHTML = data.choices[0].message.content.split("\n").join("<br />");
+    destinationElement.ariaBusy = "false";
 }
 
-export const testSpanish = (destination) => {
+export const testSpanish = async (destination) => {
     const userContent = document.getElementById("openai-prompt").value;
     const destinationElement = document.getElementById(destination);
-    const destinationDebug = document.getElementById(destination + "-debug");
     destinationElement.innerHTML = "";
     destinationElement.ariaBusy = "true";
 
-    fetch(`${openaiConfig.url}v1/chat/completions`, {
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${openaiConfig.apiKey}`,
-            "OpenAI-Organization": openaiConfig.organization,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            "model": openaiConfig.model,
-            "messages": [
-                {"role": "user", "content": userContent},
-                {"role": "system", "content": "" +
-                        "Jesteś nauczycielem hiszpańskiego. " +
-                        "Użytkownik to twój uczeń. Jest na poziomie A1. " +
-                        "Nie dodawaj pytania o to czy zrozumiał, ani powitania."}
-            ]
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            destinationElement.innerHTML = data.choices[0].message.content.split("\n").join("<br />")
-            destinationElement.ariaBusy = "false";
-            if (destinationDebug) {
-                destinationDebug.innerHTML = JSON.stringify(data);
-            }
-        })
-        .catch(error => console.error(error));
+    const data = await openai_completion(
+        `Jesteś nauczycielem hiszpańskiego, nazywasz się Juan. 
+                Użytkownik to twój uczeń. Jest na poziomie A1.
+                Nie dodawaj pytania o to czy zrozumiał, ani powitania.
+                Jeśli temat wymaga wyjaśnienia, wyjaśniaj po polsku, jeśli nie, odpowiadań wyłącznie po hiszpańsku.
+                
+                ###
+                ${userContent}`);
+
+    destinationElement.innerHTML = data.choices[0].message.content.split("\n").join("<br />")
+    destinationElement.ariaBusy = "false";
 }
 
 export const moderationAPI = async (textToModerate) => {
+    return await openai_json_call('v1/moderations', { "input": textToModerate });
+}
+
+export const openai_completion = async (user, system = "") => {
+    const messages = [
+        {"role": "user", "content": user},
+        {"role": "system", "content": system}
+    ];
+    console.log("openai_completion messages: ", messages);
+    return await openai_json_call('v1/chat/completions', {
+        "model": openaiConfig.model,
+        "messages": messages
+    });
+}
+
+const openai_json_call = async (endpoint, dataToSend) => {
     try {
-        const response = await fetch(`${openaiConfig.url}v1/moderations`, {
+        const response = await fetch(`${openaiConfig.url}${endpoint}`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${openaiConfig.apiKey}`,
                 "OpenAI-Organization": openaiConfig.organization,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                "input": textToModerate
-            })
-        })
+            body: JSON.stringify(dataToSend)
+        });
 
         if (!response.ok) {
-            throw new Error(`HTTP error ${response.status}`);
+            throw new Error(`HTTP error ${response.status} on ${endpoint}`);
         }
 
         const data = await response.json();
-        console.log("moderationAPI data: ", data)
+        console.log(`${endpoint}: `, data);
         return data;
-
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error(`Error fetching ${endpoint} data:`, error);
         return null;
     }
 }
-
-export const openai_completion = async (user, system) => {
-    try {
-        const messages = [
-            {"role": "user", "content": user},
-            {"role": "system", "content": system}
-        ]
-        console.log("openai_completion messages: ", messages)
-        const response = await fetch(`${openaiConfig.url}v1/chat/completions`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${openaiConfig.apiKey}`,
-                    "OpenAI-Organization": openaiConfig.organization,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    "model": openaiConfig.model,
-                    "messages": messages
-                })
-            })
-
-        if (!response.ok) {
-            throw new Error(`HTTP error ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log("openai_completion data: ", data)
-        return data;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        return null;
-    }
-}
-
