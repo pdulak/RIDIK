@@ -78,6 +78,9 @@ export const openai_completion = async (user, system = "") => {
 }
 
 const openai_json_call = async (endpoint, dataToSend) => {
+    const brain = document.getElementById('brain');
+    if (brain) brain.ariaBusy = "true";
+
     try {
         const response = await fetch(`${openaiConfig.url}${endpoint}`, {
             method: "POST",
@@ -95,9 +98,11 @@ const openai_json_call = async (endpoint, dataToSend) => {
 
         const data = await response.json();
         console.log(`${endpoint}: `, data);
+        if (brain) brain.ariaBusy = false;
         return data;
     } catch (error) {
         console.error(`Error fetching ${endpoint} data:`, error);
+        if (brain) brain.ariaBusy = false;
         return null;
     }
 }

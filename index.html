@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>RIDIK - Rincewind-Inspired Digital Intelligence Kompanion</title>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
     <link rel="stylesheet" type="text/css" href="css/pico.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
+    <div class="hero" data-theme="dark">
+        <nav class="container-fluid">
+            <ul>
+                <li><strong>RIDIK</strong><span id="brain"></span></li>
+            </ul>
+            <ul>
+                <li><a href="#" data-section="main" >Main</a></li>
+                <li><a href="#" data-section="openai" >OpenAI tests</a></li>
+            </ul>
+        </nav>
+    </div>
     <main class="container">
-        <section>
-            <nav>
-                <ul>
-                    <li><strong>Assistant</strong></li>
-                </ul>
-                <ul>
-                    <li><a href="#" data-section="main" >Main</a></li>
-                    <li><a href="#" data-section="openai" >OpenAI tests</a></li>
-                </ul>
-            </nav>
-        </section>
         <section id="main" class="dynamic-section">
             <details>
                 <summary>Inprompt</summary>
@@ -58,9 +58,9 @@
             <article id="openai-results"></article>
         </section>
     </main>
-    <div id="loader-background">
-        <div id="loader"></div>
-    </div>
+    <footer class="container">
+        'What shall we do?' said Twoflower. 'Panic?' said Rincewind hopefully.
+    </footer>
     <script src="renderer.js"></script>
     <script type="module" src="app.js"></script>
 </body>
