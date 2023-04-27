@@ -1,5 +1,6 @@
 {
   "zadaniaApiKey" : "api-key",
+  "zadaniaUrl" : "url-to-tasks",
   "openaiApiKey" : "sk-something",
   "openaiOrganizationID" : "org-something"
 }

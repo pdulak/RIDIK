@@ -1,7 +1,7 @@
 const tasksConfig = {
     apiKey : (config.zadaniaApiKey?config.zadaniaApiKey:""),
     token : "",
-    url : "https://url-to-zadania-api/"
+    url : (config.zadaniaUrl?config.zadaniaUrl:"")
 }
 
 export const tasksGetToken = async (taskName) => {
