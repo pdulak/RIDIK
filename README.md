@@ -8,6 +8,10 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
 3. `npm start`
 
 ## Todo
+- [ ] auto-expandable edit field for prompts
+- [ ] form that submits on Ctr+Enter for prompts
+- [ ] selection of prompt action by buttons or dropdown (auto-searchable?)
+- [ ] ability to copy prompt and response using button / shortcut
 - [ ] implement general "task result" popup / modal in which the tasks notes and debug info will be displayed instead of putting it in various places like it is now.
 - [ ] implement "convert to ColdFusion without explanations" action
 - [ ] move requests to OpenAI to Main Process and communicate through IPC
