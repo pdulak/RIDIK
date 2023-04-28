@@ -47,3 +47,27 @@ export const inprompt = async () => {
     const isOK = await tasksSendAnswer(answer)
     document.getElementById("inpromptTaskResult").innerHTML += "<hr>" + JSON.stringify(isOK);
 }
+
+export const blogger = async () => {
+    let article = "";
+    const data = await tasksGetTokenAndTaskData("blogger");
+    document.getElementById("bloggerTaskResult").innerHTML = "data: " + JSON.stringify(data) + "<hr>";
+
+    const generalPrompt = "Jeste specjalistą od wypieku pizzy oraz jesteś doświadczonym pisarzem. " +
+        "Piszesz wpis na blog dotyczący pizzy. Podany poniżej temat jest fragmentem tego wpisu, zatem to co " +
+        "teraz napiszesz jest fragmentem większej całości. Całość składa się z następujących tematów: " +
+        "\n\n" +
+        data.blog.join("; ") +
+        "\n\n" +
+        "Napisz teraz tekst według polecenia, jak najbardziej trzymając się tego konkretnego polecenia: \n\n";
+
+    const promises = data.blog.map(element => {
+        return openai_completion(generalPrompt + element);
+    });
+
+    const results = await Promise.all(promises);
+    const answer = results.map(element => element.choices[0].message.content);
+
+    const isOK = await tasksSendAnswer(answer)
+    document.getElementById("bloggerTaskResult").innerHTML += "<hr>" + JSON.stringify(isOK);
+}

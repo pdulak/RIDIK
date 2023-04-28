@@ -63,10 +63,6 @@ export const tasksSendAnswer = async (answer, token = tasksConfig.token) => {
             })
         })
 
-        if (!response.ok) {
-            throw new Error(`HTTP error ${response.status}`);
-        }
-
         const data = await response.json();
         console.log("tasksSendAnswer data: ", data)
         return data;
