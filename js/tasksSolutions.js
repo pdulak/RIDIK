@@ -1,40 +1,59 @@
 import {moderationAPI, initialize, openai_completion} from "./modules/openai.js";
 import { tasksGetTokenAndTaskData, tasksSendAnswer } from "./modules/tasks.js";
+import { addMessage, clearMessages, setModalBusy, setModalNotBusy } from "./modules/messagesModal.js";
 
 initialize(config.openaiApiKey, config.openaiOrganizationID);
 
+function startTask() {
+    clearMessages();
+    setModalBusy();
+}
+
+function endTask() {
+    setModalNotBusy();
+}
+
 export const helloapi = async () => {
+    startTask();
     const data = await tasksGetTokenAndTaskData("helloapi")
     const result = await tasksSendAnswer(data.cookie)
-    document.getElementById("taskResult").innerHTML = JSON.stringify(result)
+    addMessage(JSON.stringify(result));
+    endTask();
 }
 
 export const moderation = async () => {
+    startTask();
+
     const data = await tasksGetTokenAndTaskData("moderation");
     const sentencesToModerate = data.input;
-    document.getElementById("moderationResult").innerHTML = "<hr>Sentences: " + JSON.stringify(sentencesToModerate);
+    addMessage("Sentences: " + JSON.stringify(sentencesToModerate));
 
     const result = await moderationAPI(sentencesToModerate);
     const responseArray = result.results.map(element => element.flagged?1:0);
-    document.getElementById("moderationResult").innerHTML += "<hr>Moderation result: " + JSON.stringify(responseArray);
+    addMessage("Moderation result: " + JSON.stringify(responseArray));
 
     const isOK = await tasksSendAnswer(responseArray)
-    document.getElementById("moderationResult").innerHTML += "<hr>" + JSON.stringify(isOK);
+    addMessage(JSON.stringify(isOK));
+
+    endTask();
 }
 
 export const inprompt = async () => {
+    startTask();
+
     const data = await tasksGetTokenAndTaskData("inprompt")
-    document.getElementById("inpromptTaskResult").innerHTML = "Question to answer: " + data.question + "<hr>";
+    addMessage("Question to answer: " + data.question);
+
     const result = await openai_completion("Twoje dane wejściowe to: \n" +
         data.question +
         "\n\n" +
         "Twoje zadanie: w podanym pytaniu znajdź imię i podaj tylko i wyłącznie imię bez znaków przestankowych w formacie {{imię}} nic więcej", "");
 
     const name = result.choices[0].message.content.replace(/\{\{(\w+)\}\}/g, "$1");
-    document.getElementById("inpromptTaskResult").innerHTML += "Name found: " + name + "<hr>";
+    addMessage("Name found: " + name);
 
     const smallerData = data.input.filter(element => (element.search(name) >= 0)).join(" ");
-    document.getElementById("inpromptTaskResult").innerHTML += "Person info: " + smallerData + "<hr>"
+    addMessage("Person info: " + smallerData);
 
     const result2 = await openai_completion("Twoje dane wejściowe to: \n" +
         smallerData +
@@ -42,15 +61,19 @@ export const inprompt = async () => {
         "Twoje zadanie: " + data.question + " Odpowiedz jak najkrócej, najlepiej jednym wyrazem", "")
 
     const answer = result2.choices[0].message.content;
-    document.getElementById("inpromptTaskResult").innerHTML += "Answer to send: " + answer + "<hr>"
+    addMessage("Answer to send: " + answer);
 
     const isOK = await tasksSendAnswer(answer)
-    document.getElementById("inpromptTaskResult").innerHTML += "<hr>" + JSON.stringify(isOK);
+    addMessage(JSON.stringify(isOK));
+
+    endTask();
 }
 
 export const blogger = async () => {
+    startTask();
+
     const data = await tasksGetTokenAndTaskData("blogger");
-    document.getElementById("bloggerTaskResult").innerHTML = "data: " + JSON.stringify(data) + "<hr>";
+    addMessage("Task data: " + JSON.stringify(data));
 
     const generalPrompt = "Jeste specjalistą od wypieku pizzy oraz jesteś doświadczonym pisarzem. " +
         "Piszesz wpis na blog dotyczący pizzy. Podany poniżej temat jest fragmentem tego wpisu, zatem to co " +
@@ -67,6 +90,10 @@ export const blogger = async () => {
     const results = await Promise.all(promises);
     const answer = results.map(element => element.choices[0].message.content);
 
+    addMessage("answer: " + JSON.stringify(answer));
+
     const isOK = await tasksSendAnswer(answer)
-    document.getElementById("bloggerTaskResult").innerHTML += "<hr>" + JSON.stringify(isOK);
+    addMessage(JSON.stringify(isOK));
+
+    endTask();
 }

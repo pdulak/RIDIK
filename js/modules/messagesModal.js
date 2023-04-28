@@ -13,11 +13,23 @@ showMessages.addEventListener('click', () => {
 
 export const addMessage = (message) => {
     const messageElement = document.createElement('p');
-    const currentDate = new Date().toISOString();
+    const currentDate = new Date().toISOString().replace("T", " ");
 
     messageElement.textContent = currentDate + ": " + message;
-    popupContent.appendChild(messageElement);
+    popupContent.prepend(messageElement);
 
     // Show the popup when a new message is added
     popup.setAttribute('open', 'true');
+}
+
+export const clearMessages = () => {
+    popupContent.innerHTML = "";
+}
+
+export const setModalBusy = () => {
+    popupContent.ariaBusy = "true";
+}
+
+export const setModalNotBusy = () => {
+    popupContent.ariaBusy = "false";
 }
