@@ -8,6 +8,8 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
 3. `npm start`
 
 ## Todo
+- [ ] function to prepare data from other sources - remove HTML tags, excess chars, special chars...
+- [ ] handle OpenAI errors: (https://platform.openai.com/docs/guides/error-codes/api-errors)
 - [ ] auto-expandable edit field for prompts
 - [ ] form that submits on Ctr+Enter for prompts
 - [ ] selection of prompt action by buttons or dropdown (auto-searchable?)
