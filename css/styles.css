@@ -24,3 +24,14 @@ body > footer {
     display: inline-block;
     padding: 0 10px;
 }
+
+.openai-prompt {
+    resize: none;
+    overflow: hidden;
+    font-family: inherit;
+    font-size: inherit;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    transition: height 0.2s ease-in-out;
+}

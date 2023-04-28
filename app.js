@@ -10,3 +10,10 @@ document.getElementById("hello-api-task").addEventListener("click", helloapi);
 document.getElementById("moderation-task").addEventListener("click", moderation);
 document.getElementById("inprompt-task").addEventListener("click", inprompt);
 document.getElementById("blogger-task").addEventListener("click", blogger);
+
+// resize edit field if needed
+const openaiPrompt = document.getElementById('openai-prompt');
+openaiPrompt.addEventListener('input', () => {
+    openaiPrompt.style.height = 'auto';
+    openaiPrompt.style.height = `${openaiPrompt.scrollHeight}px`;
+});
