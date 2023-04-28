@@ -11,7 +11,11 @@
     <div class="hero" data-theme="dark">
         <nav class="container-fluid">
             <ul>
-                <li><strong id="my-name">RIDIK</strong><span id="brain"></span></li>
+                <li>
+                    <strong id="my-name">RIDIK</strong>
+                    <span id="brain"></span>
+                    <a href="#" id="show-messages">Messages</a>
+                </li>
             </ul>
             <ul>
                 <li><a href="#" data-section="main" >Main Tasks</a></li>
@@ -57,6 +61,17 @@
     <footer class="container">
         'What shall we do?' said Twoflower. 'Panic?' said Rincewind hopefully.
     </footer>
+
+    <dialog id="messages-modal">
+        <article>
+            <header>
+                <a href="#close" aria-label="Close" class="close" id="messages-modal-close"></a>
+                Messages
+            </header>
+            <div id="messages-modal-content"></div>
+        </article>
+    </dialog>
+
     <script src="renderer.js"></script>
     <script type="module" src="app.js"></script>
 </body>

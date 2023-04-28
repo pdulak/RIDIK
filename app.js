@@ -1,5 +1,5 @@
 import { initialize, getModels, testCompletion, testSpanish } from "./js/modules/openai.js";
-import {helloapi, moderation, inprompt, blogger} from "./js/tasksSolutions.js";
+import { helloapi, moderation, inprompt, blogger } from "./js/tasksSolutions.js";
 
 initialize(config.openaiApiKey, config.openaiOrganizationID);
 
