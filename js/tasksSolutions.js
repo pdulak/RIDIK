@@ -49,7 +49,6 @@ export const inprompt = async () => {
 }
 
 export const blogger = async () => {
-    let article = "";
     const data = await tasksGetTokenAndTaskData("blogger");
     document.getElementById("bloggerTaskResult").innerHTML = "data: " + JSON.stringify(data) + "<hr>";
 
