@@ -1,8 +1,10 @@
-const { app, BrowserWindow, ipcMain, nativeTheme } = require("electron")
+const { app, globalShortcut, BrowserWindow, ipcMain, nativeTheme } = require("electron")
 const path = require("path")
 
+let win
+
 function createWindow () {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         width: 1200,
         height: 800,
         frame: false,
@@ -15,6 +17,16 @@ function createWindow () {
 
     win.loadFile("index.html")
     addToggleDevToolsToWindow(win);
+
+    globalShortcut.register('CommandOrControl+Alt+i', () => {
+        win.show();
+        win.focus();
+    })
+
+    win.on('closed', () => {
+        win = null;
+    })
+
 }
 
 function addToggleDevToolsToWindow(win) {
@@ -68,4 +80,8 @@ app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
         app.quit()
     }
+})
+
+app.on('will-quit', () => {
+    globalShortcut.unregisterAll();
 })
