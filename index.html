@@ -24,7 +24,7 @@
         </nav>
     </div>
     <main class="container">
-        <section id="main" class="dynamic-section">
+        <section id="main" class="dynamic-section" style="display: none">
             <details>
                 <summary>Blogger</summary>
                 <button id="blogger-task">Execute Blogger task</button>
@@ -42,7 +42,7 @@
                 <button id="hello-api-task">Execute HelloAPI task</button>
             </details>
         </section>
-        <section id="openai" class="dynamic-section" style="display: none">
+        <section id="openai" class="dynamic-section">
             <h3>OpenAI tests</h3>
 
             <label for="commands-selection">Command:</label>
@@ -52,10 +52,11 @@
 
             <label for="openai-prompt">Prompt of User:</label>
             <textarea name="openai-prompt" id="openai-prompt" class="openai-prompt" rows="1"></textarea>
-            <a href="#" role="button" id="get-models" >Get Models</a>
-            <a href="#" role="button" id="test-completion" >Test Completion</a>
-            <a href="#" role="button" id="test-spanish" >Spanish</a>
+
+            <a href="#" role="button" id="run-command" >Run command</a>
+
             <a href="#" role="button" onclick="document.getElementById('openai-prompt').value = ''" class="secondary outline">Reset field</a>
+            <a href="#" role="button" id="get-models" >Get Models</a>
 
             <article id="openai-results"></article>
         </section>
