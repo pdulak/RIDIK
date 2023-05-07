@@ -106,3 +106,15 @@ const openai_json_call = async (endpoint, dataToSend) => {
         return null;
     }
 }
+
+export const simpleCommandExecution = async (commandContents) => {
+    const userContent = document.getElementById("openai-prompt").value;
+    const destinationElement = document.getElementById("openai-results");
+    destinationElement.innerHTML = "";
+    destinationElement.ariaBusy = "true";
+
+    const data = await openai_completion(commandContents + "\n\n" + userContent);
+
+    destinationElement.innerHTML = data.choices[0].message.content.split("\n").join("<br />");
+    destinationElement.ariaBusy = "false";
+}
