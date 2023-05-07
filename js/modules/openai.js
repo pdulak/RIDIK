@@ -5,6 +5,17 @@ const openaiConfig = {
     model : "gpt-3.5-turbo",
 }
 
+var escape = document.createElement('textarea');
+function escapeHTML(html) {
+    escape.textContent = html;
+    return escape.innerHTML;
+}
+
+function unescapeHTML(html) {
+    escape.innerHTML = html;
+    return escape.textContent;
+}
+
 export const initialize = (apiKey, organization) => {
     openaiConfig.apiKey = apiKey;
     openaiConfig.organization = organization;
@@ -28,37 +39,6 @@ export const getModels = (destination) => {
             destinationElement.ariaBusy = "false";
         })
         .catch(error => console.error("Error:", error));
-}
-
-export const testCompletion = async (destination) => {
-    const userContent = document.getElementById("openai-prompt").value;
-    const destinationElement = document.getElementById(destination);
-    destinationElement.innerHTML = "";
-    destinationElement.ariaBusy = "true";
-
-    const data = await openai_completion(userContent);
-
-    destinationElement.innerHTML = data.choices[0].message.content.split("\n").join("<br />");
-    destinationElement.ariaBusy = "false";
-}
-
-export const testSpanish = async (destination) => {
-    const userContent = document.getElementById("openai-prompt").value;
-    const destinationElement = document.getElementById(destination);
-    destinationElement.innerHTML = "";
-    destinationElement.ariaBusy = "true";
-
-    const data = await openai_completion(
-        `Jesteś nauczycielem hiszpańskiego, nazywasz się Juan. 
-                Użytkownik to twój uczeń. Jest na poziomie A1.
-                Nie dodawaj pytania o to czy zrozumiał, ani powitania.
-                Jeśli temat wymaga wyjaśnienia, wyjaśniaj po polsku, jeśli nie, odpowiadań wyłącznie po hiszpańsku.
-                
-                ###
-                ${userContent}`);
-
-    destinationElement.innerHTML = data.choices[0].message.content.split("\n").join("<br />")
-    destinationElement.ariaBusy = "false";
 }
 
 export const moderationAPI = async (textToModerate) => {
@@ -115,6 +95,6 @@ export const simpleCommandExecution = async (commandContents) => {
 
     const data = await openai_completion(commandContents + "\n\n" + userContent);
 
-    destinationElement.innerHTML = data.choices[0].message.content.split("\n").join("<br />");
+    destinationElement.innerHTML = escapeHTML(data.choices[0].message.content).split("\n").join("<br />");
     destinationElement.ariaBusy = "false";
 }
