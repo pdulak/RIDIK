@@ -1,4 +1,4 @@
-import {initialize, getModels, simpleCommandWithStreaming} from "./js/modules/openai.js";
+import {initialize, simpleCommandWithStreaming} from "./js/modules/openai.js";
 import { helloapi, moderation, inprompt, blogger } from "./js/tasksSolutions.js";
 
 initialize(config.openaiApiKey, config.openaiOrganizationID);
