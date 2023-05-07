@@ -99,3 +99,8 @@ ipcMain.handle("dark-mode:toggle", () => {
 ipcMain.handle("dark-mode:system", () => {
     nativeTheme.themeSource = "system"
 })
+
+ipcMain.handle("daoFunctions:getCommands", async (event) => {
+    const commands = await dao.Commands.findAll();
+    event.sender.send('commandsReceived', commands);
+});
