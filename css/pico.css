@@ -16,9 +16,9 @@
   --border-radius: 0.25rem;
   --border-width: 1px;
   --outline-width: 3px;
-  --spacing: 1rem;
+  --spacing: 0.5rem;
   --typography-spacing-vertical: 1.5rem;
-  --block-spacing-vertical: calc(var(--spacing) * 2);
+  --block-spacing-vertical: calc(var(--spacing) * 1);
   --block-spacing-horizontal: var(--spacing);
   --grid-spacing-vertical: 0;
   --grid-spacing-horizontal: var(--spacing);

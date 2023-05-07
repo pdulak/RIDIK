@@ -34,6 +34,10 @@ openaiPrompt.addEventListener("keydown", function(event) {
     }
 });
 
+openaiPrompt.focus();
+
+// get commands from database
+
 window.daoFunctions.getCommands();
 
 const offCommandsReceived = window.electron.on("commandsReceived", (commandsReceived) => {
