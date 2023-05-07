@@ -11,7 +11,7 @@ const handleCommand = () => {
     if (command) {
         commandContents = command.value;
     }
-    simpleCommandExecution(commandContents);
+    simpleCommandWithStreaming(commandContents);
 }
 
 document.getElementById("get-models").addEventListener("click", () => getModels("openai-results"));
