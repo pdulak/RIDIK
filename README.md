@@ -12,9 +12,10 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
 
 ## Todo
 - [ ] save API calls history in log file / database
-- [ ] use Prisma / Seqelize and connect to sqlite to save some data
-  - table with sample simple "one line" prompts to use, along with command to execute them and keyboard shortcut?
-  - table with log of API calls
+- [ ] use Seqelize and connect to sqlite to save some data
+  - [ ] table with sample simple "one line" prompts to use, along with command to execute them and keyboard shortcut?
+  - [ ] table with log of API calls
+  - [X] table with system settings
   - ???
 - [ ] function to prepare data from other sources - remove HTML tags, excess chars, special chars...
 - [ ] unfluff parsing of HTML pages
