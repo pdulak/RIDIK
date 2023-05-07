@@ -48,7 +48,7 @@ const offCommandsReceived = window.electron.on("commandsReceived", (commandsRece
     commands.map(
         command => `
             <option value="${command.name}">
-                ${command.description}
+                ${command.name} - ${command.description}
             </option>`).join("");
 });
 
