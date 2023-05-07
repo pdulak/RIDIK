@@ -5,6 +5,8 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
 ## Installation
 1. `npm i`
 2. copy `config-sample.json` to `config.json` and fill with proper keys
+3. `npx prisma init --datasource-provider sqlite` - initialize Prisma
+4. `npx prisma migrate dev --name init` - build the database based on schema
 3. `npm start`
 
 ## Todo

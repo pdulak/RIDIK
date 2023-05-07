@@ -1,5 +1,6 @@
 const { app, globalShortcut, BrowserWindow, ipcMain, nativeTheme } = require("electron")
 const path = require("path")
+import { dao } from './js/modules/dao'
 
 let win
 
@@ -17,6 +18,8 @@ function createWindow () {
 
     win.loadFile("index.html")
     addToggleDevToolsToWindow(win);
+
+    console.log('SysConfig: ', dao.checkIfSysConfigExists());
 
     globalShortcut.register('CommandOrControl+Alt+i', () => {
         win.show();

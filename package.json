@@ -2,7 +2,7 @@
   "name": "assistant",
   "version": "0.1.0",
   "description": "Dre-assistant - RIDIK",
-  "main": "main.js",
+  "main": "main.js"
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,7 +13,9 @@
     "electron": "^24.1.2"
   },
   "dependencies": {
+    "@prisma/client": "^4.13.0",
     "globalshortcut": "^0.0.3",
-    "openai": "^3.2.1"
+    "openai": "^3.2.1",
+    "prisma": "^4.13.0"
   }
 }
