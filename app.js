@@ -15,8 +15,6 @@ const handleCommand = () => {
 }
 
 document.getElementById("get-models").addEventListener("click", () => getModels("openai-results"));
-// document.getElementById("test-completion").addEventListener("click", () => testCompletion("openai-results"));
-// document.getElementById("test-spanish").addEventListener("click", () => testSpanish("openai-results"));
 document.getElementById("hello-api-task").addEventListener("click", helloapi);
 document.getElementById("moderation-task").addEventListener("click", moderation);
 document.getElementById("inprompt-task").addEventListener("click", inprompt);
@@ -28,6 +26,12 @@ const openaiPrompt = document.getElementById('openai-prompt');
 openaiPrompt.addEventListener('input', () => {
     openaiPrompt.style.height = 'auto';
     openaiPrompt.style.height = `${openaiPrompt.scrollHeight}px`;
+});
+
+openaiPrompt.addEventListener("keydown", function(event) {
+    if (event.code === 'Enter' && event.ctrlKey) {
+        handleCommand();
+    }
 });
 
 window.daoFunctions.getCommands();
