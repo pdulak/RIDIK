@@ -25,7 +25,7 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
 - [ ] ability to copy prompt and response using button / shortcut
 - [ ] editor for commands - save to DB
 - [ ] use framework such as React or SolidJS
-- [ ] "general" panel with predefined tasks that are quickly switched using keyboard shourtuct
+- [ ] format response text using code formatter for ``` code parts ```
 - [ ] better way of toggling between dark and light mode
 - [ ] add icon
 - [ ] actions to implement (or save in the database)
@@ -33,6 +33,7 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
   - [X] "act as JS developer..."
   - [X] "act as Python developer..."
   - [X] "act as Spanish teacher"
+- [X] "general" panel with predefined tasks that are quickly switched using keyboard shourtuct
 - [X] form that submits on Ctr+Enter for prompts
 - [X] keyboard shortcut to bring RIDIK window to the top
 - [X] implement general "task result" popup / modal in which the tasks notes and debug info will be displayed instead of putting it in various places like it is now.

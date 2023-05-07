@@ -5,7 +5,7 @@ const openaiConfig = {
     model : "gpt-3.5-turbo",
 }
 
-var escape = document.createElement('textarea');
+const escape = document.createElement('textarea');
 function escapeHTML(html) {
     escape.textContent = html;
     return escape.innerHTML;

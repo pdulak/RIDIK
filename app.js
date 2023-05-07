@@ -14,7 +14,6 @@ const handleCommand = () => {
     simpleCommandWithStreaming(commandContents);
 }
 
-document.getElementById("get-models").addEventListener("click", () => getModels("openai-results"));
 document.getElementById("hello-api-task").addEventListener("click", helloapi);
 document.getElementById("moderation-task").addEventListener("click", moderation);
 document.getElementById("inprompt-task").addEventListener("click", inprompt);
