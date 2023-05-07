@@ -5,12 +5,15 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
 ## Installation
 1. `npm i`
 2. copy `config-sample.json` to `config.json` and fill with proper keys
+3. `npx sequelize-cli init`
+4. `npx sequelize-cli db:migrate`
 3. `npm start`
+
 
 ## Todo
 - [ ] save API calls history in log file / database
 - [ ] use Prisma / Seqelize and connect to sqlite to save some data
-  - table with sample simple "one line" prompts to use, along with command to execute them and keyboard shortcut? 
+  - table with sample simple "one line" prompts to use, along with command to execute them and keyboard shortcut?
   - table with log of API calls
   - ???
 - [ ] function to prepare data from other sources - remove HTML tags, excess chars, special chars...
@@ -31,7 +34,70 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
 - [ ] use framework such as React or SolidJS
 - [ ] "general" panel with predefined tasks that are quickly switched using keyboard shourtuct
 - [ ] better way of toggling between dark and light mode
-- [ ] add icon 
+- [ ] add icon
 - [X] keyboard shortcut to bring RIDIK window to the top
 - [X] implement general "task result" popup / modal in which the tasks notes and debug info will be displayed instead of putting it in various places like it is now.
 - [X] auto-expandable edit field for prompts
+
+### Sample sequelize model creations:
+
+`npx sequelize-cli model:generate --name SysConfig --attributes name:string,value:string`
+
+`npx sequelize-cli model:generate --name Commands --attributes name:string,value:string,description:string`
+
+running seeds:
+
+`npx sequelize-cli db:seed:all`
+
+### Sequelize manual migration
+https://dev.to/nedsoft/add-new-fields-to-existing-sequelize-migration-3527
+
+##### Step 1 - Create a new migration
+`npx sequelize-cli migration:create --name modify_users_add_new_fields`
+
+##### Step 2 - Edit the migrations to suit the need
+```javascript
+module.exports = {
+  up(queryInterface, Sequelize) {
+    return Promise.all([
+      queryInterface.addColumn(
+        'Users', // table name
+        'twitter', // new field name
+        {
+          type: Sequelize.STRING,
+          allowNull: true,
+        },
+      ),
+      queryInterface.addColumn(
+        'Users',
+        'linkedin',
+        {
+          type: Sequelize.STRING,
+          allowNull: true,
+        },
+      ),
+      queryInterface.addColumn(
+        'Users',
+        'bio',
+        {
+          type: Sequelize.TEXT,
+          allowNull: true,
+        },
+      ),
+    ]);
+  },
+
+  down(queryInterface, Sequelize) {
+    // logic for reverting the changes
+    return Promise.all([
+      queryInterface.removeColumn('Users', 'linkedin'),
+      queryInterface.removeColumn('Users', 'twitter'),
+      queryInterface.removeColumn('Users', 'bio'),
+    ]);
+  },
+};
+```
+
+##### Step 3 - run migration
+`npx sequelize-cli db:migrate`
+
