@@ -6,12 +6,13 @@ const openaiConfig = {
 }
 
 const escape = document.createElement('textarea');
-function escapeHTML(html) {
+
+const escapeHTML = (html) => {
     escape.textContent = html;
     return escape.innerHTML;
 }
 
-function unescapeHTML(html) {
+const unescapeHTML = (html) => {
     escape.innerHTML = html;
     return escape.textContent;
 }
@@ -141,8 +142,6 @@ export const simpleCommandWithStreaming = async (commandContents) => {
     destinationElement.ariaBusy = "true";
 
     const data = await openai_completion(commandContents + "\n\n" + userContent, "", destinationElement);
-
-    // destinationElement.innerHTML = escapeHTML(data.choices[0].message.content).split("\n").join("<br />");
 
     destinationElement.ariaBusy = "false";
 }
