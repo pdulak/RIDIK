@@ -23,7 +23,7 @@
             </ul>
         </nav>
     </div>
-    <main class="container">
+    <main class="container" style="padding-top: 10px">
         <section id="main" class="dynamic-section" style="display: none">
             <details>
                 <summary>Blogger</summary>
@@ -43,7 +43,7 @@
             </details>
         </section>
         <section id="openai" class="dynamic-section">
-            <h3>OpenAI tests</h3>
+            <article id="openai-results">...</article>
 
             <label for="commands-selection">Command:</label>
             <select name="commands-selection" id="commands-selection">
@@ -57,8 +57,6 @@
 
             <a href="#" role="button" onclick="document.getElementById('openai-prompt').value = ''" class="secondary outline">Reset field</a>
             <a href="#" role="button" id="get-models" >Get Models</a>
-
-            <article id="openai-results"></article>
         </section>
     </main>
     <footer class="container">
