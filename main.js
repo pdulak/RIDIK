@@ -43,6 +43,26 @@ async function createWindow () {
 
 }
 
+app.whenReady().then(() => {
+    createWindow()
+
+    app.on("activate", () => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow()
+        }
+    })
+})
+
+app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+        app.quit()
+    }
+})
+
+app.on('will-quit', () => {
+    globalShortcut.unregisterAll();
+})
+
 function addToggleDevToolsToWindow(win) {
     win.webContents.on("before-input-event", (e, input) => {
         if (input.type === "keyDown" && input.key === "F12") {
@@ -78,24 +98,4 @@ ipcMain.handle("dark-mode:toggle", () => {
 
 ipcMain.handle("dark-mode:system", () => {
     nativeTheme.themeSource = "system"
-})
-
-app.whenReady().then(() => {
-    createWindow()
-
-    app.on("activate", () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow()
-        }
-    })
-})
-
-app.on("window-all-closed", () => {
-    if (process.platform !== "darwin") {
-        app.quit()
-    }
-})
-
-app.on('will-quit', () => {
-    globalShortcut.unregisterAll();
 })
