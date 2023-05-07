@@ -1,9 +1,11 @@
 const { app, globalShortcut, BrowserWindow, ipcMain, nativeTheme } = require("electron")
 const path = require("path")
+const { Dao } = require("./js/modules/dao")
 
 let win
+const dao = Dao()
 
-function createWindow () {
+async function createWindow () {
     win = new BrowserWindow({
         width: 1200,
         height: 800,
@@ -15,10 +17,22 @@ function createWindow () {
         }
     })
 
-    win.loadFile("index.html")
+    win.loadFile("index.html");
     addToggleDevToolsToWindow(win);
 
-    globalShortcut.register('CommandOrControl+Alt+i', () => {
+    globalKeyboardShortcut = 'CommandOrControl+Alt+i';
+    if (await dao.checkConnection()) {
+        const data = await dao.SysConfig.findOne({
+            where: {
+                name: "globalKeyboardShortcut"
+            }
+        });
+        if (data && data !== '') {
+            globalKeyboardShortcut = data.value;
+        }
+    }
+
+    globalShortcut.register(globalKeyboardShortcut, () => {
         win.show();
         win.focus();
     })
