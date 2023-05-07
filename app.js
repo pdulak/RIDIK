@@ -17,3 +17,11 @@ openaiPrompt.addEventListener('input', () => {
     openaiPrompt.style.height = 'auto';
     openaiPrompt.style.height = `${openaiPrompt.scrollHeight}px`;
 });
+
+document.getElementById('testButton').addEventListener('click', function () {
+    window.daoFunctions.getCommands();
+});
+
+const offCommandsReceived = window.electron.on("commandsReceived", (commands) => {
+    console.log('received', commands);
+});

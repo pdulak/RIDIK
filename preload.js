@@ -17,3 +17,16 @@ contextBridge.exposeInMainWorld("darkMode", {
 })
 
 contextBridge.exposeInMainWorld("config", config);
+
+contextBridge.exposeInMainWorld("daoFunctions", {
+    getCommands: () => ipcRenderer.invoke("daoFunctions:getCommands")
+});
+
+contextBridge.exposeInMainWorld("electron", {
+    invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
+    on: (channel, listener) => {
+        const wrappedListener = (event, ...args) => listener(...args);
+        ipcRenderer.on(channel, wrappedListener);
+        return () => ipcRenderer.removeListener(channel, wrappedListener);
+    }
+});
