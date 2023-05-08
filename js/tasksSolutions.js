@@ -1,4 +1,4 @@
-import {moderationAPI, initialize, openai_completion} from "./modules/openai.js";
+import { moderationAPI, initialize, openai_completion } from "./modules/openai.js";
 import { tasksGetTokenAndTaskData, tasksSendAnswer } from "./modules/tasks.js";
 import { addMessage, clearMessages, setModalBusy, setModalNotBusy } from "./modules/messagesModal.js";
 
@@ -91,6 +91,62 @@ export const blogger = async () => {
     const answer = results.map(element => element.choices[0].message.content);
 
     addMessage("answer: " + JSON.stringify(answer));
+
+    const isOK = await tasksSendAnswer(answer)
+    addMessage(JSON.stringify(isOK));
+
+    endTask();
+}
+
+const fetchPage = async (pageURL, retries = 5) => {
+    try {
+        const response = await fetch(pageURL);
+
+        if (!response.ok) {
+            if (retries > 0) {
+                return await fetchPage(pageURL, retries - 1);
+            } else {
+                throw new Error(`Request failed with status ${response.status}`);
+            }
+        }
+
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        if (retries > 0) {
+            return await fetchPage(pageURL, retries - 1);
+        } else {
+            throw error;
+        }
+    }
+};
+
+export const scraper = async () => {
+    startTask();
+
+    const data = await tasksGetTokenAndTaskData("scraper");
+    addMessage("Task data: " + JSON.stringify(data));
+
+    const promptTask = data.msg;
+    const promptInputUrl = data.input;
+    const promptQuestion = data.question;
+
+    let pageData = "";
+    try {
+        pageData = await fetchPage(promptInputUrl);
+        addMessage("Fetched page of length: " + pageData.length);
+    } catch (error) {
+        addMessage("Failed to fetch page data: " + error);
+    }
+
+    const prompt = "### THE ARTICLE\n" + pageData + "\n\n" +
+        "### THE TASK\n" + promptTask + "\n\n" +
+        "### QUESTION\n" + promptQuestion;
+
+    const result = await openai_completion(prompt);
+    const answer = result.choices[0].message.content;
+
+    addMessage("answer: " + answer);
 
     const isOK = await tasksSendAnswer(answer)
     addMessage(JSON.stringify(isOK));

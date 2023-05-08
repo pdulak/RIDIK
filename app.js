@@ -1,5 +1,5 @@
 import {initialize, simpleCommandWithStreaming} from "./js/modules/openai.js";
-import { helloapi, moderation, inprompt, blogger } from "./js/tasksSolutions.js";
+import { helloapi, moderation, inprompt, blogger, scraper } from "./js/tasksSolutions.js";
 
 initialize(config.openaiApiKey, config.openaiOrganizationID);
 
@@ -18,6 +18,7 @@ document.getElementById("hello-api-task").addEventListener("click", helloapi);
 document.getElementById("moderation-task").addEventListener("click", moderation);
 document.getElementById("inprompt-task").addEventListener("click", inprompt);
 document.getElementById("blogger-task").addEventListener("click", blogger);
+document.getElementById("scraper-task").addEventListener("click", scraper);
 document.getElementById("run-command").addEventListener("click", handleCommand);
 
 // resize edit field if needed
