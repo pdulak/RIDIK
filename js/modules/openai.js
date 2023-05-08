@@ -48,10 +48,20 @@ export const moderationAPI = async (textToModerate) => {
 
 export const openai_completion = async (user, system = "", destinationElement = null) => {
     const messages = [
+        {"role": "system", "content": system},
         {"role": "user", "content": user},
-        {"role": "system", "content": system}
     ];
     console.log("openai_completion messages: ", messages);
+    return await openai_json_call('v1/chat/completions', {
+        "model": openaiConfig.model,
+        "messages": messages,
+        stream: (destinationElement?true:false),
+    }, destinationElement);
+}
+
+
+export const openai_completion_chat = async (messages, destinationElement = null) => {
+    console.log("openai_completion_chat messages: ", messages);
     return await openai_json_call('v1/chat/completions', {
         "model": openaiConfig.model,
         "messages": messages,
@@ -135,13 +145,9 @@ export const simpleCommandExecution = async (commandContents) => {
     destinationElement.ariaBusy = "false";
 }
 
-export const simpleCommandWithStreaming = async (commandContents) => {
+export const simpleCommandWithStreaming = async (commandContents, destinationElement) => {
     const userContent = document.getElementById("openai-prompt").value;
-    const destinationElement = document.getElementById("openai-results");
-    destinationElement.innerHTML = "";
     destinationElement.ariaBusy = "true";
-
     const data = await openai_completion(commandContents + "\n\n" + userContent, "", destinationElement);
-
     destinationElement.ariaBusy = "false";
 }

@@ -1,17 +1,48 @@
-import {initialize, simpleCommandWithStreaming} from "./js/modules/openai.js";
+import {initialize, simpleCommandWithStreaming, openai_completion_chat } from "./js/modules/openai.js";
 import { taskSolver } from "./js/tasksSolutions.js";
 
 initialize(config.openaiApiKey, config.openaiOrganizationID);
 
 let commands;
 
-const handleCommand = () => {
+
+const getCurrentCommand = () => {
     let commandContents = "You are a helpful assistant. Respond in a language in which user asked the question.";
     const command = commands.find(command => command.name === document.getElementById("commands-selection").value);
     if (command) {
         commandContents = command.value;
     }
-    simpleCommandWithStreaming(commandContents);
+    return commandContents;
+}
+
+
+const handleCommand = () => {
+    const promptContents = document.getElementById("openai-prompt").value;
+    document.getElementById("openai-prompt").value = "";
+    const mainChat = document.getElementById("main-chat");
+    const numberOfElements = mainChat.children.length;
+    if (numberOfElements === 0) {
+        mainChat.innerHTML = `
+            <article class="user initial-message" data-role="user">${getCurrentCommand()}</article>
+            <article class="assistant initial-message" data-role="assistant">OK</article>
+        `;
+    }
+    mainChat.innerHTML += `<article class="user" data-role="user">${promptContents}</article>`;
+
+    const chatMessages = Array.from(document.querySelectorAll("#main-chat article"));
+    const messages = chatMessages.map(message => {
+        return {
+            "role" : message.dataset.role,
+            "content" : message.innerText
+        }
+    });
+
+    mainChat.innerHTML += `<article class="assistant assistant-current" data-role="assistant"></article>`;
+    const destinationElement = document.querySelector(".assistant-current");
+    destinationElement.ariaBusy = "true";
+    openai_completion_chat(messages, destinationElement);
+    destinationElement.classList.remove("assistant-current");
+    destinationElement.ariaBusy = "false";
 }
 
 document.getElementById("perform-task").addEventListener("click", () => {
