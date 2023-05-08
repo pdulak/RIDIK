@@ -33,19 +33,20 @@
                 <option value="moderation">Moderation API</option>
                 <option value="helloapi">HelloAPI</option>
             </select>
-
             <a href="#" role="button" id="perform-task" >Perform task</a>
         </section>
-        <section id="openai" class="dynamic-section" style="margin-bottom: 0">
-            <div style="min-height: calc(100vh - 60px)" id="main-chat"></div>
-
-            <div style="position: sticky; bottom: 0; left: 0; width: 100%; display: flex; justify-content: center;">
-                <div style="display: flex; width: 100%; max-width: 1130px">
-                    <select name="commands-selection" id="commands-selection" style="width: 250px">
-                        <option value="">Helpful assistant</option>
-                    </select>
+        <section id="openai" class="dynamic-section">
+            <div class="openai-header">
+                <select name="commands-selection" id="commands-selection">
+                    <option value="">Helpful assistant</option>
+                </select>
+            </div>
+            <div id="main-chat" class="hide-scrollbar"></div>
+            <div class="openai-footer">
+                <div class="openai-footer-container">
                     <textarea name="openai-prompt" id="openai-prompt" class="openai-prompt" rows="1"></textarea>
-                    <button id="run-command" style="width: 65px">&gt;</button>
+                    <button id="run-command" >&gt;</button>
+                    <button id="reset-chat" class="outline">X</button>
                 </div>
             </div>
         </section>
