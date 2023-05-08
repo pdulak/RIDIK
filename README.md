@@ -19,6 +19,8 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
   - ???
 - [ ] function to prepare data from other sources - remove HTML tags, excess chars, special chars...
 - [ ] unfluff parsing of HTML pages
+- [ ] library of prompt additions (snippets) such as: `Acknowledge this by just saying "..." and nothing more.` or `Return JSON object, only JSON object and nothing more`
+- [ ] library of sources with contents - pages, notes, etc.
 - [ ] handle OpenAI errors: (https://platform.openai.com/docs/guides/error-codes/api-errors)
 - [ ] selection of prompt action by buttons or dropdown (auto-searchable?)
   - [X] also - using the list of commands stored in the database
