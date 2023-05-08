@@ -153,3 +153,26 @@ export const scraper = async () => {
 
     endTask();
 }
+
+export const taskSolver = (taskName) => {
+    switch (taskName) {
+        case "helloapi":
+            helloapi();
+            break;
+        case "moderation":
+            moderation();
+            break;
+        case "inprompt":
+            inprompt();
+            break;
+        case "blogger":
+            blogger();
+            break;
+        case "scraper":
+            scraper();
+            break;
+        default:
+            console.log("Unknown task: " + taskName);
+            break;
+    }
+}

@@ -1,5 +1,5 @@
 import {initialize, simpleCommandWithStreaming} from "./js/modules/openai.js";
-import { helloapi, moderation, inprompt, blogger, scraper } from "./js/tasksSolutions.js";
+import { taskSolver } from "./js/tasksSolutions.js";
 
 initialize(config.openaiApiKey, config.openaiOrganizationID);
 
@@ -14,11 +14,10 @@ const handleCommand = () => {
     simpleCommandWithStreaming(commandContents);
 }
 
-document.getElementById("hello-api-task").addEventListener("click", helloapi);
-document.getElementById("moderation-task").addEventListener("click", moderation);
-document.getElementById("inprompt-task").addEventListener("click", inprompt);
-document.getElementById("blogger-task").addEventListener("click", blogger);
-document.getElementById("scraper-task").addEventListener("click", scraper);
+document.getElementById("perform-task").addEventListener("click", () => {
+    const task = document.getElementById("tasks-list").value;
+    taskSolver(task);
+});
 document.getElementById("run-command").addEventListener("click", handleCommand);
 
 // resize edit field if needed

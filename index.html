@@ -25,26 +25,16 @@
     </div>
     <main class="container" style="padding-top: 10px">
         <section id="main" class="dynamic-section" style="display: none">
-            <details>
-                <summary>Scraper</summary>
-                <button id="scraper-task">Execute Scraper task</button>
-            </details>
-            <details>
-                <summary>Blogger</summary>
-                <button id="blogger-task">Execute Blogger task</button>
-            </details>
-            <details>
-                <summary>Inprompt</summary>
-                <button id="inprompt-task">Execute Inprompt task</button>
-            </details>
-            <details>
-                <summary>Moderation API</summary>
-                <button id="moderation-task">Execute Moderation API task</button>
-            </details>
-            <details>
-                <summary>HelloAPI</summary>
-                <button id="hello-api-task">Execute HelloAPI task</button>
-            </details>
+            <label for="tasks-list">Tasks</label>
+            <select name="tasks-list" id="tasks-list">
+                <option value="scraper">Scraper</option>
+                <option value="blogger">Blogger</option>
+                <option value="inprompt">Inprompt</option>
+                <option value="moderation">Moderation API</option>
+                <option value="helloapi">HelloAPI</option>
+            </select>
+
+            <a href="#" role="button" id="perform-task" >Perform task</a>
         </section>
         <section id="openai" class="dynamic-section">
             <article id="openai-results">...</article>
