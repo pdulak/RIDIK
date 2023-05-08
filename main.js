@@ -14,7 +14,8 @@ async function createWindow () {
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
             nodeIntegration: true
-        }
+        },
+        icon: path.join(__dirname, "images", "hat-1-64-64.png")
     })
 
     win.loadFile("index.html");
