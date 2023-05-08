@@ -1,8 +1,9 @@
-import {initialize, simpleCommandWithStreaming, openai_completion_chat } from "./js/modules/openai.js";
+import { initialize, openai_completion_chat } from "./js/modules/openai.js";
 import { taskSolver } from "./js/tasksSolutions.js";
 
 initialize(config.openaiApiKey, config.openaiOrganizationID);
 
+const mainChatDiv = document.getElementById('main-chat');
 let commands;
 
 
@@ -19,15 +20,18 @@ const getCurrentCommand = () => {
 const handleCommand = () => {
     const promptContents = document.getElementById("openai-prompt").value;
     document.getElementById("openai-prompt").value = "";
-    const mainChat = document.getElementById("main-chat");
-    const numberOfElements = mainChat.children.length;
+    document.getElementById('openai-prompt').style.height = 'auto';
+    const numberOfElements = mainChatDiv.children.length;
     if (numberOfElements === 0) {
-        mainChat.innerHTML = `
+        mainChatDiv.innerHTML = `
             <article class="user initial-message" data-role="user">${getCurrentCommand()}</article>
             <article class="assistant initial-message" data-role="assistant">OK</article>
         `;
     }
-    mainChat.innerHTML += `<article class="user" data-role="user">${promptContents}</article>`;
+    mainChatDiv.innerHTML += `
+        <div class="user">
+            <article data-role="user">${promptContents}</article>
+        </div>`;
 
     const chatMessages = Array.from(document.querySelectorAll("#main-chat article"));
     const messages = chatMessages.map(message => {
@@ -37,7 +41,11 @@ const handleCommand = () => {
         }
     });
 
-    mainChat.innerHTML += `<article class="assistant assistant-current" data-role="assistant"></article>`;
+    mainChatDiv.innerHTML += `
+        <div class="assistant">
+            <article class="assistant-current" data-role="assistant"></article>
+        </div>
+    `;
     const destinationElement = document.querySelector(".assistant-current");
     destinationElement.ariaBusy = "true";
     openai_completion_chat(messages, destinationElement);
@@ -50,6 +58,10 @@ document.getElementById("perform-task").addEventListener("click", () => {
     taskSolver(task);
 });
 document.getElementById("run-command").addEventListener("click", handleCommand);
+document.getElementById("reset-chat").addEventListener("click", () => {
+    mainChatDiv.innerHTML = "";
+});
+
 
 // resize edit field if needed
 const openaiPrompt = document.getElementById('openai-prompt');
@@ -65,6 +77,7 @@ openaiPrompt.addEventListener("keydown", function(event) {
 });
 
 openaiPrompt.focus();
+
 
 // get commands from database
 
@@ -83,3 +96,21 @@ const offCommandsReceived = window.electron.on("commandsReceived", (commandsRece
             </option>`).join("");
 });
 
+
+// move chat window always to the bottom
+
+let chatHeight = mainChatDiv.scrollHeight;
+
+const observer = new MutationObserver(function(mutationList, observer) {
+    const newChatHeight = mainChatDiv.scrollHeight;
+    if (newChatHeight !== chatHeight) {
+        mainChatDiv.scrollTop = mainChatDiv.scrollHeight;
+    }
+    chatHeight = newChatHeight;
+});
+
+observer.observe(mainChatDiv, {
+    attributes: false,
+    childList: true,
+    subtree: true }
+);
