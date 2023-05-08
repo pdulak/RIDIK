@@ -7,12 +7,12 @@
     <link rel="stylesheet" type="text/css" href="css/pico.css">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
-<body>
+<body style="padding-bottom: 0">
     <div class="hero" data-theme="dark">
         <nav class="container-fluid">
             <ul>
                 <li>
-                    <strong id="my-name">RIDIK</strong>
+                    <strong id="my-name" title="'What shall we do?' said Twoflower. 'Panic?' said Rincewind hopefully.">RIDIK</strong>
                     <span id="brain"></span>
                     <a href="#" id="show-messages">Messages</a>
                 </li>
@@ -23,7 +23,7 @@
             </ul>
         </nav>
     </div>
-    <main class="container" style="padding-top: 10px">
+    <main class="container" style="padding-top: 10px; padding-bottom: 0">
         <section id="main" class="dynamic-section" style="display: none">
             <label for="tasks-list">Tasks</label>
             <select name="tasks-list" id="tasks-list">
@@ -36,24 +36,22 @@
 
             <a href="#" role="button" id="perform-task" >Perform task</a>
         </section>
-        <section id="openai" class="dynamic-section">
-            <article id="openai-results">...</article>
+        <section id="openai" class="dynamic-section" style="margin-bottom: 0">
+            <div style="min-height: calc(100vh - 60px)" id="main-chat">
+                <article id="openai-results">...</article>
+            </div>
 
-            <select name="commands-selection" id="commands-selection">
-                <option value="">Helpful assistant</option>
-            </select>
-
-            <textarea name="openai-prompt" id="openai-prompt" class="openai-prompt" rows="1"></textarea>
-
-            <a href="#" role="button" id="run-command" >Run command</a>
-
-            <a href="#" role="button" onclick="document.getElementById('openai-prompt').value = ''" class="secondary outline">Reset field</a>
+            <div style="position: sticky; bottom: 0; left: 0; width: 100%; display: flex; justify-content: center;">
+                <div style="display: flex; width: 100%; max-width: 1130px">
+                    <select name="commands-selection" id="commands-selection" style="width: 250px">
+                        <option value="">Helpful assistant</option>
+                    </select>
+                    <textarea name="openai-prompt" id="openai-prompt" class="openai-prompt" rows="1"></textarea>
+                    <button id="run-command" style="width: 65px">&gt;</button>
+                </div>
+            </div>
         </section>
     </main>
-    <footer class="container">
-        'What shall we do?' said Twoflower. 'Panic?' said Rincewind hopefully.
-    </footer>
-
     <dialog id="messages-modal">
         <article>
             <header>
