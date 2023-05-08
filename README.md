@@ -31,7 +31,7 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
 - [ ] use framework such as React or SolidJS
 - [ ] format response text using code formatter for ``` code parts ```
 - [ ] better way of toggling between dark and light mode
-- [ ] add icon
+- [X] add icon
 - [ ] actions to implement (or save in the database)
   - [X] implement "convert to ColdFusion without explanations" action
   - [X] "act as JS developer..."
