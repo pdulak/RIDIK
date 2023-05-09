@@ -98,28 +98,36 @@ export const blogger = async () => {
     endTask();
 }
 
-const fetchPage = async (pageURL, retries = 5) => {
-    try {
-        const response = await fetch(pageURL);
+const fetchPage = async (pageURL, noMoreThan = 5, initialTimeout = 30000) => {
+    let tries = noMoreThan;
+    let timeout = initialTimeout;
+    let data = "";
 
-        if (!response.ok) {
-            if (retries > 0) {
-                return await fetchPage(pageURL, retries - 1);
-            } else {
-                throw new Error(`Request failed with status ${response.status}`);
+    while (tries > 0) {
+        try {
+            const response = await Promise.race([
+                fetch(pageURL),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error("Timeout")), timeout)
+                ),
+            ]);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
             }
-        }
 
-        const data = await response.text();
-        return data;
-    } catch (error) {
-        if (retries > 0) {
-            return await fetchPage(pageURL, retries - 1);
-        } else {
-            throw error;
+            data = await response.text();
+            break;
+        } catch (error) {
+            console.error(`Attempt failed: ${error.message}`);
+            tries--;
+            timeout += 30000;
         }
     }
-};
+
+    return data;
+}
+
 
 export const scraper = async () => {
     startTask();
