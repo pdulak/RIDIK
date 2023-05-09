@@ -1,0 +1,3 @@
+- dla ($n <= 0) zwracaj 0
+- dla ($n == 1) zwracaj 1
+- dla większych liczb ciąg Fibonnacciego bez rekurencji
