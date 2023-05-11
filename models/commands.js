@@ -19,7 +19,9 @@ module.exports = (sequelize, DataTypes) => {
   Commands.init({
     name: DataTypes.STRING,
     value: DataTypes.STRING,
-    description: DataTypes.STRING
+    description: DataTypes.STRING,
+    uuid: DataTypes.STRING,
+    model: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Commands',
