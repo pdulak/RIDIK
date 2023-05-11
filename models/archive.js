@@ -20,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     question: DataTypes.STRING,
     fullContext: DataTypes.STRING,
     answer: DataTypes.STRING,
-    uuid: DataTypes.STRING
+    uuid: DataTypes.STRING,
+    system: DataTypes.STRING,
+    endpoint: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Archive',

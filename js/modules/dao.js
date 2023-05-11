@@ -13,8 +13,9 @@ function Dao() {
         }
     }
 
-    const saveOpenAIConversation = ({ dataToSend, answer }) => {
+    const saveOpenAIConversation = ({ dataToSend, answer, endpoint }) => {
         let lastUserMessage = null;
+        let systemMessage = null;
         if (dataToSend && dataToSend.messages) {
             lastUserMessage = dataToSend.messages.reduceRight((prev, message) => {
                 if (!prev && message.role === "user") {
@@ -22,12 +23,15 @@ function Dao() {
                 }
                 return prev;
             }, null);
+            systemMessage = dataToSend.messages.find(message => message.role === "system");
         };
 
         Archive.create({
             question: lastUserMessage?.content || null,
             fullContext: JSON.stringify(dataToSend),
             answer: answer,
+            system: systemMessage?.content || null,
+            endpoint: endpoint,
         })
     }
 

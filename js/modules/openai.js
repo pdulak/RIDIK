@@ -118,7 +118,7 @@ const openai_json_call = async (endpoint, dataToSend, destinationElement = null)
             }
 
             if (brain) brain.ariaBusy = false;
-            window.daoFunctions.saveOpenAIConversation({ dataToSend, answer });
+            window.daoFunctions.saveOpenAIConversation({ dataToSend, answer, endpoint });
             return "";
 
         } else {
@@ -135,7 +135,7 @@ const openai_json_call = async (endpoint, dataToSend, destinationElement = null)
             } else {
                 answer = JSON.stringify(result);
             }
-            window.daoFunctions.saveOpenAIConversation({ dataToSend, answer });
+            window.daoFunctions.saveOpenAIConversation({ dataToSend, answer, endpoint });
             if (brain) brain.ariaBusy = false;
             return result;
         }
