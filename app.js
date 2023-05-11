@@ -6,6 +6,22 @@ initialize(config.openaiApiKey, config.openaiOrganizationID);
 const mainChatDiv = document.getElementById('main-chat');
 let commands;
 
+const rememberPrompt = `You are a sophisticated AI classifier. Your task is to analyze user input to determine if the user's intention is to share information for you to remember or to ask a question. Based on the user's message, provide an appropriate response using the following guidelines:
+
+If the message contains information to remember or specifically asks you to remember something, respond with:
+
+R|{information to remember - whole sentence}|{primary subject - single word - noun}
+
+If the message contains a question, respond with:
+
+Q|{primary subject - single word - noun}
+
+For all other messages, respond with:
+
+NO
+
+Ensure your responses are clear, concise, and accurately reflect the user's intent. Answer only using one of the examples above.`;
+
 
 const getCurrentCommand = () => {
     let commandContents = "You are a knowledgeable and friendly assistant, here to provide support and guidance to users. Your goal is to help answer questions and provide solutions in a concise and informative manner.";
@@ -78,22 +94,6 @@ const checkIfQuesitonOrSomethingToRemember = async () => {
         isInMyDatabase : false,
         subject : ''
     }
-
-    const rememberPrompt = `You are a sophisticated AI classifier. Your task is to analyze user input to determine if the user's intention is to share information for you to remember or to ask a question. Based on the user's message, provide an appropriate response using the following guidelines:
-
-If the message contains information to remember or specifically asks you to remember something, respond with:
-
-R|{information to remember - whole sentence}|{primary subject - single word - noun}
-
-If the message contains a question, respond with:
-
-Q|{primary subject - single word - noun}
-
-For all other messages, respond with:
-
-NO
-
-Ensure your responses are clear, concise, and accurately reflect the user's intent. Answer only using one of the examples above.`;
 
     const messages =  [
         {"role": "system", "content": rememberPrompt},
