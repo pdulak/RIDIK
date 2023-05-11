@@ -14,15 +14,18 @@ function Dao() {
     }
 
     const saveOpenAIConversation = ({ dataToSend, answer }) => {
-        const lastUserMessage = dataToSend.messages.reduceRight((prev, message) => {
-            if (!prev && message.role === "user") {
-                return message;
-            }
-            return prev;
-        }, null);
+        let lastUserMessage = null;
+        if (dataToSend && dataToSend.messages) {
+            lastUserMessage = dataToSend.messages.reduceRight((prev, message) => {
+                if (!prev && message.role === "user") {
+                    return message;
+                }
+                return prev;
+            }, null);
+        };
 
         Archive.create({
-            question: lastUserMessage.content,
+            question: lastUserMessage?.content || null,
             fullContext: JSON.stringify(dataToSend),
             answer: answer,
         })
