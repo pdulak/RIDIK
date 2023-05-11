@@ -109,3 +109,4 @@ ipcMain.handle("daoFunctions:getCommands", async (event) => {
 ipcMain.handle("daoFunctions:saveOpenAIConversation", async (event, data) => {
     dao.saveOpenAIConversation(data);
 });
+

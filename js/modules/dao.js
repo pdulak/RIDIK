@@ -40,9 +40,7 @@ function Dao() {
         saveOpenAIConversation,
         sequelize,
         SysConfig,
-        Commands,
-        Archive,
-        Fact,
+        Commands
     }
 }
 
