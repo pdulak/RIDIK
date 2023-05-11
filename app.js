@@ -8,7 +8,7 @@ let commands;
 
 
 const getCurrentCommand = () => {
-    let commandContents = "You are a helpful assistant. Respond in a language in which user asked the question.";
+    let commandContents = "You are a knowledgeable and friendly assistant, here to provide support and guidance to users. Your goal is to help answer questions and provide solutions in a concise and informative manner.";
     const command = commands.find(command => command.name === document.getElementById("commands-selection").value);
     if (command) {
         commandContents = command.value;
@@ -69,12 +69,66 @@ const prepareDestinationElement = () => {
     return document.querySelector(".assistant-current");
 }
 
-const executeMainChatProcess = () => {
+
+const checkIfQuesitonOrSomethingToRemember = async () => {
+    const promptContents = document.getElementById("openai-prompt").value;
+    const response = {
+        isQuestion : false,
+        isSomethingToRemember : false,
+        isInMyDatabase : false,
+        subject : ''
+    }
+
+    const rememberPrompt = `You are a sophisticated AI classifier. Your task is to analyze user input to determine if the user's intention is to share information for you to remember or to ask a question. Based on the user's message, provide an appropriate response using the following guidelines:
+
+If the message contains information to remember or specifically asks you to remember something, respond with:
+
+R|{information to remember - whole sentence}|{primary subject - single word - noun}
+
+If the message contains a question, respond with:
+
+Q|{primary subject - single word - noun}
+
+For all other messages, respond with:
+
+NO
+
+Ensure your responses are clear, concise, and accurately reflect the user's intent. Answer only using one of the examples above.`;
+
+    const messages =  [
+        {"role": "system", "content": rememberPrompt},
+        {"role": "user", "content": promptContents},
+    ]
+
+    const result = await openai_completion_chat({ messages, temperature : 0.4 });
+    const answer = result.choices[0].message.content;
+    console.log("answer: ", answer);
+    if (answer.startsWith("Q|")) {
+        response.isQuestion = true;
+        response.subject = answer.split("|")[1];
+        // check if is in my database, return context if available
+        return response;
+    }
+    if (answer.startsWith("R|")) {
+        response.isSomethingToRemember = true;
+        response.subject = answer.split("|")[2];
+        // save to database
+        return response;
+    }
+
+    response.isSomethingToRemember = true;
+    return response;
+
+}
+
+const executeMainChatProcess = async () => {
+    const rememberOrQuestion = await checkIfQuesitonOrSomethingToRemember();
+    console.log("rememberOrQuestion: ", rememberOrQuestion);
     const messages = pullMessagesFromMainChat();
     const destinationElement = prepareDestinationElement();
 
     destinationElement.ariaBusy = "true";
-    openai_completion_chat(messages, destinationElement);
+    openai_completion_chat({ messages, destinationElement });
     destinationElement.classList.remove("assistant-current");
     destinationElement.ariaBusy = "false";
 }

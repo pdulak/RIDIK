@@ -60,11 +60,12 @@ export const openai_completion = async (user, system = "", destinationElement = 
 }
 
 
-export const openai_completion_chat = async (messages, destinationElement = null) => {
+export const openai_completion_chat = async ({ messages, destinationElement = null, temperature = 1} ) => {
     console.log("openai_completion_chat messages: ", messages);
     return await openai_json_call('v1/chat/completions', {
         "model": openaiConfig.model,
         "messages": messages,
+        "temperature": temperature,
         stream: (destinationElement?true:false),
     }, destinationElement);
 }
