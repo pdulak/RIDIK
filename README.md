@@ -11,11 +11,11 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
 
 
 ## Todo
-- [ ] save API calls history in log file / database
 - [X] use Seqelize and connect to sqlite to save some data
   - [ ] table with sample simple "one line" prompts to use, along with command to execute them and keyboard shortcut?
-  - [ ] table with log of API calls
+  - [X] table with log of API calls
   - [X] table with system settings
+  - [X] table with commands
   - ???
 - [ ] function to prepare data from other sources - remove HTML tags, excess chars, special chars...
 - [ ] unfluff parsing of HTML pages
@@ -29,6 +29,7 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
 - [ ] use framework such as React or SolidJS
 - [ ] format response text using code formatter for ``` code parts ```
 - [ ] better way of toggling between dark and light mode
+- [X] save API calls history in log file / database
 - [X] remember conversation steps, give ability to reset conversation
 - [X] adjust design of chat window - make it more like a chat window with a sticky prompt at the bottom, conversation that contains questions and answers, etc.
 - [X] add icon
