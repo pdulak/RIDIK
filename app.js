@@ -17,10 +17,15 @@ const getCurrentCommand = () => {
 }
 
 
-const handleCommand = () => {
+const getOpenAIPromptAndCleanIt = () => {
     const promptContents = document.getElementById("openai-prompt").value;
     document.getElementById("openai-prompt").value = "";
     document.getElementById('openai-prompt').style.height = 'auto';
+    return promptContents;
+}
+
+
+const fillCommandIfEmpty = () => {
     const numberOfElements = mainChatDiv.children.length;
     if (numberOfElements === 0) {
         mainChatDiv.innerHTML = `
@@ -28,10 +33,20 @@ const handleCommand = () => {
             <article class="assistant initial-message" data-role="assistant">OK</article>
         `;
     }
+}
+
+const addCurrentPromptToConversation = () => {
+    const promptContents = getOpenAIPromptAndCleanIt();
     mainChatDiv.innerHTML += `
         <div class="user">
             <article data-role="user">${promptContents}</article>
         </div>`;
+}
+
+
+const pullMessagesFromMainChat = () => {
+    fillCommandIfEmpty();
+    addCurrentPromptToConversation();
 
     const chatMessages = Array.from(document.querySelectorAll("#main-chat article"));
     const messages = chatMessages.map(message => {
@@ -41,12 +56,23 @@ const handleCommand = () => {
         }
     });
 
+    return messages;
+}
+
+const prepareDestinationElement = () => {
     mainChatDiv.innerHTML += `
         <div class="assistant">
             <article class="assistant-current" data-role="assistant"></article>
         </div>
     `;
-    const destinationElement = document.querySelector(".assistant-current");
+
+    return document.querySelector(".assistant-current");
+}
+
+const executeMainChatProcess = () => {
+    const messages = pullMessagesFromMainChat();
+    const destinationElement = prepareDestinationElement();
+
     destinationElement.ariaBusy = "true";
     openai_completion_chat(messages, destinationElement);
     destinationElement.classList.remove("assistant-current");
@@ -57,7 +83,7 @@ document.getElementById("perform-task").addEventListener("click", () => {
     const task = document.getElementById("tasks-list").value;
     taskSolver(task);
 });
-document.getElementById("run-command").addEventListener("click", handleCommand);
+document.getElementById("run-command").addEventListener("click", executeMainChatProcess);
 document.getElementById("reset-chat").addEventListener("click", () => {
     mainChatDiv.innerHTML = "";
 });
@@ -72,7 +98,7 @@ openaiPrompt.addEventListener('input', () => {
 
 openaiPrompt.addEventListener("keydown", function(event) {
     if (event.code === 'Enter' && event.ctrlKey) {
-        handleCommand();
+        executeMainChatProcess();
     }
 });
 
