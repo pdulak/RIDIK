@@ -1,4 +1,4 @@
-const { sequelize, Commands, SysConfig } = require('../../models');
+const { sequelize, Commands, SysConfig, Archive, Fact } = require('../../models');
 
 function Dao() {
 
@@ -13,11 +13,29 @@ function Dao() {
         }
     }
 
+    const saveOpenAIConversation = ({ dataToSend, answer }) => {
+        const lastUserMessage = dataToSend.messages.reduceRight((prev, message) => {
+            if (!prev && message.role === "user") {
+                return message;
+            }
+            return prev;
+        }, null);
+
+        Archive.create({
+            question: lastUserMessage.content,
+            fullContext: JSON.stringify(dataToSend),
+            answer: answer,
+        })
+    }
+
     return {
         checkConnection,
+        saveOpenAIConversation,
         sequelize,
         SysConfig,
         Commands,
+        Archive,
+        Fact,
     }
 }
 

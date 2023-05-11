@@ -19,7 +19,8 @@ contextBridge.exposeInMainWorld("darkMode", {
 contextBridge.exposeInMainWorld("config", config);
 
 contextBridge.exposeInMainWorld("daoFunctions", {
-    getCommands: () => ipcRenderer.invoke("daoFunctions:getCommands")
+    getCommands: () => ipcRenderer.invoke("daoFunctions:getCommands"),
+    saveOpenAIConversation: (data) => ipcRenderer.invoke("daoFunctions:saveOpenAIConversation", data),
 });
 
 contextBridge.exposeInMainWorld("electron", {

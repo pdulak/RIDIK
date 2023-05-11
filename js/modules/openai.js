@@ -72,6 +72,7 @@ export const openai_completion_chat = async (messages, destinationElement = null
 
 const openai_json_call = async (endpoint, dataToSend, destinationElement = null) => {
     const brain = document.getElementById('brain');
+    let answer = '';
     if (brain) brain.ariaBusy = "true";
 
     try {
@@ -93,7 +94,6 @@ const openai_json_call = async (endpoint, dataToSend, destinationElement = null)
             destinationElement.innerText = "";
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
-            let answer = '';
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) {
@@ -118,17 +118,18 @@ const openai_json_call = async (endpoint, dataToSend, destinationElement = null)
             }
 
             if (brain) brain.ariaBusy = false;
+            window.daoFunctions.saveOpenAIConversation({ dataToSend, answer });
             return "";
 
         } else {
-            const data = await response.json();
-            console.log(`${endpoint}: `, data);
+            answer = await response.json();
             if (brain) brain.ariaBusy = false;
-            return data;
+            return answer;
         }
     } catch (error) {
         console.error(`Error fetching ${endpoint} data:`, error);
         if (brain) brain.ariaBusy = false;
+        window.daoFunctions.saveOpenAIConversation({ dataToSend, answer });
         return null;
     }
 }

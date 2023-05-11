@@ -105,3 +105,7 @@ ipcMain.handle("daoFunctions:getCommands", async (event) => {
     const commands = await dao.Commands.findAll();
     event.sender.send('commandsReceived', commands);
 });
+
+ipcMain.handle("daoFunctions:saveOpenAIConversation", async (event, data) => {
+    dao.saveOpenAIConversation(data);
+});
