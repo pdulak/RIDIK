@@ -1,4 +1,6 @@
 const { sequelize, Commands, SysConfig, Archive, Fact } = require('../../models');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 function Dao() {
 
@@ -35,6 +37,17 @@ function Dao() {
         })
     }
 
+    const findFactsBySingleKey = async (subject) => {
+        return Fact.findAll({
+            where: {
+                [Op.or]: [
+                    { tags: { [Op.like]: '%' + subject + '%' } },
+                    { key: { [Op.like]: '%' + subject + '%' } }
+                ]
+            }
+        });
+    };
+
     return {
         checkConnection,
         saveOpenAIConversation,
@@ -42,6 +55,7 @@ function Dao() {
         SysConfig,
         Commands,
         Fact,
+        findFactsBySingleKey,
     }
 }
 

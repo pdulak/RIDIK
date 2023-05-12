@@ -91,7 +91,8 @@ const checkIfQuesitonOrSomethingToRemember = async () => {
         isQuestion : false,
         isSomethingToRemember : false,
         isInMyDatabase : false,
-        subject : ''
+        subject : '',
+        facts: null,
     }
 
     const messages =  [
@@ -101,11 +102,12 @@ const checkIfQuesitonOrSomethingToRemember = async () => {
 
     const result = await openai_completion_chat({ messages, temperature : 0.4 });
     const answer = result.choices[0].message.content;
-    console.log("answer: ", answer);
     if (answer.startsWith("Q|")) {
         response.isQuestion = true;
         response.subject = answer.split("|")[1];
         // check if is in my database, return context if available
+        response.facts = await window.daoFunctions.findFactsBySingleKey(response.subject);
+        response.isInMyDatabase = response.facts.length > 0;
         return response;
     }
     if (answer.startsWith("R|")) {
@@ -128,12 +130,16 @@ const checkIfQuesitonOrSomethingToRemember = async () => {
 
 const executeMainChatProcess = async () => {
     const rememberOrQuestion = await checkIfQuesitonOrSomethingToRemember();
-    console.log("rememberOrQuestion: ", rememberOrQuestion);
     const messages = pullMessagesFromMainChat();
     const destinationElement = prepareDestinationElement();
 
     if (rememberOrQuestion.isSomethingToRemember) {
         destinationElement.innerText = "OK, I will remember that.";
+    } else if (rememberOrQuestion.isQuestion && rememberOrQuestion.isInMyDatabase) {
+        const result = rememberOrQuestion.facts.reduce((accumulator, current) => {
+            return accumulator + current.dataValues.value + '\n';
+        }, '');
+        destinationElement.innerText = "Database contents: \n" + result;
     } else {
         destinationElement.ariaBusy = "true";
         openai_completion_chat({ messages, destinationElement });
