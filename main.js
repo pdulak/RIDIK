@@ -1,6 +1,8 @@
-const { app, globalShortcut, BrowserWindow, ipcMain, nativeTheme } = require("electron")
+const { app, BrowserWindow, ipcMain, nativeTheme } = require("electron")
 const path = require("path")
 const { Dao } = require("./js/modules/dao")
+const { addToggleDevToolsToWindow } = require("./js/modules/devtools");
+const { registerMainShortcut, unregisterShortcuts } = require("./js/modules/shortcuts-main");
 
 let win
 const dao = Dao()
@@ -20,28 +22,11 @@ async function createWindow () {
 
     win.loadFile("index.html");
     addToggleDevToolsToWindow(win);
-
-    globalKeyboardShortcut = 'CommandOrControl+Alt+i';
-    if (await dao.checkConnection()) {
-        const data = await dao.SysConfig.findOne({
-            where: {
-                name: "globalKeyboardShortcut"
-            }
-        });
-        if (data && data !== '') {
-            globalKeyboardShortcut = data.value;
-        }
-    }
-
-    globalShortcut.register(globalKeyboardShortcut, () => {
-        win.show();
-        win.focus();
-    })
+    registerMainShortcut(win);
 
     win.on('closed', () => {
         win = null;
     })
-
 }
 
 app.whenReady().then(() => {
@@ -61,32 +46,8 @@ app.on("window-all-closed", () => {
 })
 
 app.on('will-quit', () => {
-    globalShortcut.unregisterAll();
+    unregisterShortcuts();
 })
-
-function addToggleDevToolsToWindow(win) {
-    win.webContents.on("before-input-event", (e, input) => {
-        if (input.type === "keyDown" && input.key === "F12") {
-            win.webContents.toggleDevTools();
-
-            win.webContents.on("devtools-opened", () => {
-                // Can"t use mainWindow.webContents.devToolsWebContents.on("before-input-event") - it just doesn"t intercept any events.
-                win.webContents.devToolsWebContents.executeJavaScript(`
-                            new Promise((resolve)=> {
-                              addEventListener("keydown", (event) => {
-                                if (event.key === "F12") {
-                                  resolve();
-                                }
-                              }, { once: true });
-                            })
-                          `)
-                    .then(() => {
-                        win.webContents.toggleDevTools();
-                    });
-            });
-        }
-    });
-}
 
 ipcMain.handle("dark-mode:toggle", () => {
     if (nativeTheme.shouldUseDarkColors) {
