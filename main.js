@@ -1,11 +1,9 @@
 const { app, BrowserWindow, ipcMain, nativeTheme } = require("electron")
 const path = require("path")
-const { Dao } = require("./js/modules/dao")
 const { addToggleDevToolsToWindow } = require("./js/modules/devtools");
 const { registerMainShortcut, unregisterShortcuts } = require("./js/modules/shortcuts-main");
 
 let win
-const dao = Dao()
 
 async function createWindow () {
     win = new BrowserWindow({
@@ -62,12 +60,4 @@ ipcMain.handle("dark-mode:system", () => {
     nativeTheme.themeSource = "system"
 })
 
-ipcMain.handle("daoFunctions:getCommands", async (event) => {
-    const commands = await dao.Commands.findAll();
-    event.sender.send('commandsReceived', commands);
-});
-
-ipcMain.handle("daoFunctions:saveOpenAIConversation", async (event, data) => {
-    dao.saveOpenAIConversation(data);
-});
 

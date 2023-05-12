@@ -1,6 +1,5 @@
 const { globalShortcut } = require('electron');
-const { Dao } = require('./dao');
-const dao = Dao();
+const { dao } = require('./dao');
 
 async function registerMainShortcut(win) {
     globalKeyboardShortcut = 'CommandOrControl+Alt+i';

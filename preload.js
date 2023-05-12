@@ -3,6 +3,7 @@ const path = require("path")
 const fs = require("fs")
 const configRootPath = path.resolve(__dirname,"config.json");
 const config = JSON.parse(fs.readFileSync(configRootPath, { encoding: "utf-8" }));
+const { dao } = require("./js/modules/dao")
 
 contextBridge.exposeInMainWorld("versions", {
     node: () => process.versions.node,
@@ -19,8 +20,8 @@ contextBridge.exposeInMainWorld("darkMode", {
 contextBridge.exposeInMainWorld("config", config);
 
 contextBridge.exposeInMainWorld("daoFunctions", {
-    getCommands: () => ipcRenderer.invoke("daoFunctions:getCommands"),
-    saveOpenAIConversation: (data) => ipcRenderer.invoke("daoFunctions:saveOpenAIConversation", data),
+    getCommands: async () => { return await dao.Commands.findAll() },
+    saveOpenAIConversation: (data) => { dao.saveOpenAIConversation(data) },
 });
 
 contextBridge.exposeInMainWorld("electron", {

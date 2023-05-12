@@ -1,4 +1,4 @@
-const { sequelize, Commands, SysConfig, Archive, Fact } = require('../../models');
+const { sequelize, Commands, SysConfig, Archive } = require('../../models');
 
 function Dao() {
 
@@ -24,7 +24,7 @@ function Dao() {
                 return prev;
             }, null);
             systemMessage = dataToSend.messages.find(message => message.role === "system");
-        };
+        }
 
         Archive.create({
             question: lastUserMessage?.content || null,
@@ -45,5 +45,5 @@ function Dao() {
 }
 
 module.exports = {
-    Dao,
+    dao: Dao(),
 }

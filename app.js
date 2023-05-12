@@ -4,6 +4,7 @@ import { taskSolver } from "./js/tasksSolutions.js";
 initialize(config.openaiApiKey, config.openaiOrganizationID);
 
 const mainChatDiv = document.getElementById('main-chat');
+const openaiPrompt = document.getElementById('openai-prompt');
 let commands;
 
 const rememberPrompt = `You are a sophisticated AI classifier. Your task is to analyze user input to determine if the user's intention is to share information for you to remember or to ask a question. Based on the user's message, provide an appropriate response using the following guidelines:
@@ -65,14 +66,12 @@ const pullMessagesFromMainChat = () => {
     addCurrentPromptToConversation();
 
     const chatMessages = Array.from(document.querySelectorAll("#main-chat article"));
-    const messages = chatMessages.map(message => {
+    return chatMessages.map(message => {
         return {
             "role" : message.dataset.role,
             "content" : message.innerText
         }
     });
-
-    return messages;
 }
 
 const prepareDestinationElement = () => {
@@ -133,64 +132,68 @@ const executeMainChatProcess = async () => {
     destinationElement.ariaBusy = "false";
 }
 
-document.getElementById("perform-task").addEventListener("click", () => {
-    const task = document.getElementById("tasks-list").value;
-    taskSolver(task);
-});
-document.getElementById("run-command").addEventListener("click", executeMainChatProcess);
-document.getElementById("reset-chat").addEventListener("click", () => {
-    mainChatDiv.innerHTML = "";
-});
-
-
-// resize edit field if needed
-const openaiPrompt = document.getElementById('openai-prompt');
-openaiPrompt.addEventListener('input', () => {
-    openaiPrompt.style.height = 'auto';
-    openaiPrompt.style.height = `${openaiPrompt.scrollHeight}px`;
-});
-
-openaiPrompt.addEventListener("keydown", function(event) {
-    if (event.code === 'Enter' && event.ctrlKey) {
-        executeMainChatProcess();
-    }
-});
-
-openaiPrompt.focus();
-
-
-// get commands from database
-
-window.daoFunctions.getCommands();
-
-const offCommandsReceived = window.electron.on("commandsReceived", (commandsReceived) => {
+const setCommandsFromDatabase = async () => {
+    const commandsReceived = await window.daoFunctions.getCommands();
     commands = commandsReceived.map(command => command.dataValues);
 
-    // get selectbox of ID = commandsSelection and fill options using commandsReceived
     document.getElementById("commands-selection").innerHTML =
         `<option value="">Helpful assistant</option>` +
-    commands.map(
-        command => `
-            <option value="${command.name}">
-                ${command.name} - ${command.description}
-            </option>`).join("");
-});
+        commands.map(
+            command => `
+        <option value="${command.name}">
+            ${command.name} - ${command.description}
+        </option>`).join("");
+}
 
+const scrollChatToBottom = () => {
+    // move chat window always to the bottom
+    let chatHeight = mainChatDiv.scrollHeight;
 
-// move chat window always to the bottom
+    const observer = new MutationObserver(function() {
+        const newChatHeight = mainChatDiv.scrollHeight;
+        if (newChatHeight !== chatHeight) {
+            mainChatDiv.scrollTop = mainChatDiv.scrollHeight;
+        }
+        chatHeight = newChatHeight;
+    });
 
-let chatHeight = mainChatDiv.scrollHeight;
+    observer.observe(mainChatDiv, {
+        attributes: false,
+        childList: true,
+        subtree: true }
+    );
+}
 
-const observer = new MutationObserver(function(mutationList, observer) {
-    const newChatHeight = mainChatDiv.scrollHeight;
-    if (newChatHeight !== chatHeight) {
-        mainChatDiv.scrollTop = mainChatDiv.scrollHeight;
-    }
-    chatHeight = newChatHeight;
-});
+const prepareOpenAIPrompt = () => {
+    document.getElementById("run-command").addEventListener("click", executeMainChatProcess);
+    document.getElementById("reset-chat").addEventListener("click", () => {
+        mainChatDiv.innerHTML = "";
+    });
 
-observer.observe(mainChatDiv, {
-    attributes: false,
-    childList: true,
-    subtree: true }
-);
+    // resize edit field if needed
+    openaiPrompt.addEventListener('input', () => {
+        openaiPrompt.style.height = 'auto';
+        openaiPrompt.style.height = `${openaiPrompt.scrollHeight}px`;
+    });
+
+    openaiPrompt.addEventListener("keydown", function(event) {
+        if (event.code === 'Enter' && event.ctrlKey) {
+            executeMainChatProcess();
+        }
+    });
+
+    openaiPrompt.focus();
+}
+
+const initializeApp = async () => {
+    document.getElementById("perform-task").addEventListener("click", () => {
+        const task = document.getElementById("tasks-list").value;
+        taskSolver(task);
+    });
+
+    prepareOpenAIPrompt();
+    setCommandsFromDatabase();
+    scrollChatToBottom();
+}
+
+initializeApp();
