@@ -112,6 +112,12 @@ const checkIfQuesitonOrSomethingToRemember = async () => {
         response.isSomethingToRemember = true;
         response.subject = answer.split("|")[2];
         // save to database
+        window.daoFunctions.createFact({
+            value: promptContents,
+            source: "chat",
+            tags: response.subject,
+            key: response.subject,
+        });
         return response;
     }
 
@@ -126,8 +132,13 @@ const executeMainChatProcess = async () => {
     const messages = pullMessagesFromMainChat();
     const destinationElement = prepareDestinationElement();
 
-    destinationElement.ariaBusy = "true";
-    openai_completion_chat({ messages, destinationElement });
+    if (rememberOrQuestion.isSomethingToRemember) {
+        destinationElement.innerText = "OK, I will remember that.";
+    } else {
+        destinationElement.ariaBusy = "true";
+        openai_completion_chat({ messages, destinationElement });
+    }
+
     destinationElement.classList.remove("assistant-current");
     destinationElement.ariaBusy = "false";
 }

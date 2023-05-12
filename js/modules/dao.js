@@ -1,4 +1,4 @@
-const { sequelize, Commands, SysConfig, Archive } = require('../../models');
+const { sequelize, Commands, SysConfig, Archive, Fact } = require('../../models');
 
 function Dao() {
 
@@ -40,7 +40,8 @@ function Dao() {
         saveOpenAIConversation,
         sequelize,
         SysConfig,
-        Commands
+        Commands,
+        Fact,
     }
 }
 
