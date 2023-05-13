@@ -86,10 +86,20 @@ body > footer {
     display: inline-block;
     text-align: right;
     color: #555;
-    border-color: #444;
+    border: none;
+    background: none;
 }
 
 #main-chat div.assistant article {
+    --background-color: var(--form-element-background-color);
+    --border-color: var(--form-element-border-color);
+    --color: var(--form-element-color);
+    --box-shadow: none;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    outline: none;
+    background-color: var(--background-color);
+    box-shadow: var(--box-shadow);
     display: inline-block;
 }
 
