@@ -6,6 +6,9 @@ initialize(config.openaiApiKey, config.openaiOrganizationID);
 const mainChatDiv = document.getElementById('main-chat');
 const openaiPrompt = document.getElementById('openai-prompt');
 let commands;
+let sendToWebhook = false;
+let webhookURL = null;
+let displayWebhookResults = false;
 
 const mainPrompt =
 `As a knowledgeable and affable AI assistant, your primary role is to offer comprehensive support and guidance to the user. 
@@ -106,6 +109,14 @@ const getCurrentCommand = () => {
     const command = commands.find(command => command.name === document.getElementById("commands-selection").value);
     if (command) {
         commandContents = command.value;
+        console.log('selected command: ', command);
+        sendToWebhook = command.sendToWebhook;
+        webhookURL = command.webhookURL;
+        displayWebhookResults = command.displayWebhookResults;
+    } else {
+        sendToWebhook = false;
+        webhookURL = null;
+        displayWebhookResults = false;
     }
     return commandContents;
 }
@@ -242,6 +253,33 @@ const checkIfQuestionOrSomethingToRemember = async () => {
     return response;
 }
 
+const handleWebhookCommunication = async (openAIresponse, destinationElement) => {
+    try {
+        console.log('sending webhook: ', openAIresponse);
+        JSON.parse(openAIresponse);
+        fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: openAIresponse
+        })
+            .then(async response => {
+                if (response.ok) {
+                    const responseText = await response.text();
+                    destinationElement.innerHTML = responseText;
+                } else {
+                    console.log('Error sending webhook request.');
+                }
+            })
+            .catch(error => {
+                console.error('An error occurred while sending the webhook request:', error);
+            });
+    } catch (error) {
+        console.log('error parsing JSON for webhook', error);
+    }
+}
+
 const executeMainChatProcess = async () => {
     const rememberOrQuestion = await checkIfQuestionOrSomethingToRemember();
     const messages = pullMessagesFromMainChat();
@@ -256,6 +294,11 @@ const executeMainChatProcess = async () => {
             .replace('[[database]]', rememberOrQuestion.facts)
             .replace('[[question]]', messages[messages.length - 1].content);
         openai_completion_chat({ messages, destinationElement });
+    } else if (sendToWebhook) {
+        destinationElement.innerText = "Let me do that for you...";
+        const openAIPromise = await openai_completion_chat({ messages });
+        const openAIResponse = await openAIPromise.choices[0].message.content;
+        handleWebhookCommunication(openAIResponse, destinationElement);
     } else {
         openai_completion_chat({ messages, destinationElement });
     }
