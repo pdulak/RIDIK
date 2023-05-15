@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING,
     uuid: DataTypes.STRING,
     model: DataTypes.STRING,
+    webhookURL: DataTypes.STRING,
+    sendToWebhook: DataTypes.BOOLEAN,
+    displayWebhookResults: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'Commands',
