@@ -7,25 +7,81 @@ const mainChatDiv = document.getElementById('main-chat');
 const openaiPrompt = document.getElementById('openai-prompt');
 let commands;
 
-const rememberPrompt = `You are a sophisticated AI classifier. Your task is to analyze user input to determine if the user's intention is to share information for you to remember or to ask a question. Based on the user's message, provide an appropriate response using the following guidelines:
+const mainPrompt =
+`As a knowledgeable and affable AI assistant, your primary role is to offer comprehensive support and guidance to the user. 
+You should be prepared to assist with a wide range of inquiries and tasks that the user might present.
 
-If the message contains information to remember or specifically asks you to remember something, respond with:
+Strive to mirror the language used by the user in your responses. This might involve mirroring their level of formality, 
+tone, or specific vocabulary, unless the user specifies otherwise. For instance, if a user requests responses 
+in a specific format such as code or JSON, provide the information as requested without additional commentary.
 
-R|{information to remember - whole sentence}|{primary subject - single word - noun}
+In terms of tone, aim to be upbeat and approachable. Your responses should sound natural, be grammatically flawless, 
+and convey a friendly demeanor. Ensure your responses are packed with useful and visual information, 
+delivered in a logical and actionable manner. Strive to make the interaction both interesting and engaging, 
+similar to a casual, enjoyable conversation between friends. Feel free to occasionally sprinkle your responses 
+with colloquial expressions and idiomatic phrases for an extra touch of authenticity.
 
-If the message contains a question, respond with:
+While providing comprehensive responses is important, remember to prioritize brevity and clarity as much as possible. 
+When required, multi-paragraph responses are acceptable, but your default should be to provide concise, to-the-point answers.
 
-Q|{primary subject - single word - noun}
+Most importantly, ensure that every response is tailored to meet the user's specific needs, 
+with an emphasis on clear and relevant information. 
+Your ultimate goal is to make the user's experience as pleasant and productive as possible.
+`;
 
-For all other messages, respond with:
+const classificationPrompt = `Describe my intention from message below with JSON. Focus on the beginning of it. Always return JSON and nothing more. 
+Types: action|query|memory
+Example:
+Write a newsletter. {"type":"action"}
+Save a note. {"type":"action"}
+Are you Alice? {"type":"query"}
+What is the name of his sister? {"type":"query"}
+Remember that Alexa is a dog. {"type":"memory"}
+I need to finish something important for tomorrow. Add it to my list. {"type":"action"}
 
-NO
+###message
+`;
 
-Ensure your responses are clear, concise, and accurately reflect the user's intent. Answer only using one of the examples above.`;
 
+const memoPrompt =
+`As an AI assistant, your task is to prepare a 'sentence' to be stored, 
+identify tags focusing on entities and key points within the sentence, and determine a single keyword of 
+utmost importance from the sentence. The responses should be strictly in JSON format and include only the items specified.
+
+Your job is to extract a memo, 
+generate relevant tags based on entities and key concepts, and select a crucial keyword from the sentence. 
+
+For example, if the user says, "Remember that Berlin, London, and Amsterdam are the biggest cities in the European Union", 
+your response should be: {"memo":"Berlin, London, and Amsterdam are the biggest cities in the European Union", "tags":"Berlin,London,Amsterdam,cities,European Union","keyword":"cities"}
+
+Alternatively, if the user says, "Remember that my friend Adam has a wife named Eve", 
+your response should be: {"memo":"Adam's wife name is Eve", "tags":"Adam,Eve,wife", "keyword":"Adam"}
+
+Your primary objective is to accurately parse and categorize the user's intent to produce the 
+most relevant and useful response in JSON format and nothing more.
+
+###sentence
+`;
+
+const questionPrompt =
+`As an AI assistant, your role is to identify tags and a single keyword from a question that the user asks. 
+These tags should focus on the entities and key points of the question, and the keyword should be the most 
+significant term in the query. The results should be provided exclusively in JSON format, as follows: {"tags":"{tags}", "keyword":"keyword"}
+
+For example, if the user asks, "What is the capital of France?", your response should capture the key 
+points and the most important keyword. In this case, your output might look like this: {"tags":"capital,France", "keyword":"France"}
+
+If the user asks, "How many people live in New York City?", your response could be: {"tags":"people, live, New York City", "keyword":"New York City"}
+
+Your primary task is to extract the relevant tags and the main keyword from the user's question 
+and present them in a concise, clear, and useful manner in the requested JSON format.
+
+###question
+`;
 
 const getCurrentCommand = () => {
-    let commandContents = "You are a knowledgeable and friendly assistant, here to provide support and guidance to users. Your goal is to help answer questions and provide solutions in a concise and informative manner.";
+    let commandContents = mainPrompt;
+
     const command = commands.find(command => command.name === document.getElementById("commands-selection").value);
     if (command) {
         commandContents = command.value;
@@ -85,51 +141,84 @@ const prepareDestinationElement = () => {
 }
 
 
-const checkIfQuesitonOrSomethingToRemember = async () => {
+const handleMemoSave = async (promptContents, response) => {
+    const messages = [
+        {"role": "user", "content": memoPrompt + promptContents},
+    ]
+    const result = await openai_completion_chat({ messages });
+    try {
+        const parsedMemo = JSON.parse(result?.choices[0]?.message?.content || null);
+        response.isSomethingToRemember = true;
+        // save to database
+        window.daoFunctions.createFact({
+            value: parsedMemo.memo,
+            source: "chat",
+            tags: parsedMemo.tags,
+            key: parsedMemo.keyword,
+        });
+        return response;
+    } catch (error) {
+        console.log('error parsing JSON from memo prompt', error);
+        return response;
+    }
+}
+
+
+const handleFactsRecall = async (promptContents, response) => {
+    const messages = [
+        {"role": "user", "content": questionPrompt + promptContents},
+    ];
+    const result = await openai_completion_chat({ messages });
+    try {
+        const parsedQuestion = JSON.parse(result?.choices[0]?.message?.content || null);
+        const allTags = parsedQuestion.tags.split(',').push(parsedQuestion.keyword);
+
+        response.facts = await window.daoFunctions.findFactsByKeywords(allTags);
+        response.isQuestion = true;
+        response.isInMyDatabase = response.facts.length > 0;
+
+        return response;
+    } catch (error) {
+        console.log('error parsing JSON from question prompt', error);
+        return response;
+    }
+}
+
+
+const checkIfQuestionOrSomethingToRemember = async () => {
     const promptContents = document.getElementById("openai-prompt").value;
     const response = {
         isQuestion : false,
         isSomethingToRemember : false,
         isInMyDatabase : false,
-        subject : '',
         facts: null,
     }
 
-    const messages =  [
-        {"role": "system", "content": rememberPrompt},
-        {"role": "user", "content": promptContents},
+    let messages =  [
+        // {"role": "system", "content": rememberPrompt},
+        {"role": "user", "content": classificationPrompt + promptContents},
     ]
 
-    const result = await openai_completion_chat({ messages, temperature : 0.4 });
-    const answer = result.choices[0].message.content;
-    if (answer.startsWith("Q|")) {
-        response.isQuestion = true;
-        response.subject = answer.split("|")[1];
-        // check if is in my database, return context if available
-        response.facts = await window.daoFunctions.findFactsBySingleKey(response.subject);
-        response.isInMyDatabase = response.facts.length > 0;
-        return response;
-    }
-    if (answer.startsWith("R|")) {
-        response.isSomethingToRemember = true;
-        response.subject = answer.split("|")[2];
-        // save to database
-        window.daoFunctions.createFact({
-            value: promptContents,
-            source: "chat",
-            tags: response.subject,
-            key: response.subject,
-        });
+    let result = await openai_completion_chat({ messages, temperature : 0.4 });
+    //check if answer is JSON
+    try {
+        const parsedAnswer = JSON.parse(result?.choices[0]?.message?.content || null);
+        if (parsedAnswer.type === 'memory') {
+            return handleMemoSave(promptContents, response);
+        }
+        if (parsedAnswer.type === 'query') {
+            return handleFactsRecall(promptContents, response);
+        }
+    } catch (error) {
+        console.log('error parsing JSON from classification prompt', error);
         return response;
     }
 
-    response.isSomethingToRemember = true;
     return response;
-
 }
 
 const executeMainChatProcess = async () => {
-    const rememberOrQuestion = await checkIfQuesitonOrSomethingToRemember();
+    const rememberOrQuestion = await checkIfQuestionOrSomethingToRemember();
     const messages = pullMessagesFromMainChat();
     const destinationElement = prepareDestinationElement();
 

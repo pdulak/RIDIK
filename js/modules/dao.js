@@ -48,6 +48,31 @@ function Dao() {
         });
     };
 
+    const findFactsByKeywords = async (keywords) => {
+        return Fact.findAll({
+            where: {
+                [Op.or]: [
+                    {
+                        tags: {
+                            [Op.or]: keywords.map(keyword => ({
+                                [Op.like]: '%' + keyword.trim() + '%'
+                            }))
+                        }
+                    },
+                    {
+                        key: {
+                            [Op.or]: keywords.map(keyword => ({
+                                [Op.like]: '%' + keyword.trim() + '%'
+                            }))
+                        }
+                    }
+                ]
+            },
+            order: [['createdAt', 'DESC']],
+            limit: 25
+        });
+    };
+
     return {
         checkConnection,
         saveOpenAIConversation,
@@ -56,6 +81,7 @@ function Dao() {
         Commands,
         Fact,
         findFactsBySingleKey,
+        findFactsByKeywords,
     }
 }
 

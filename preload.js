@@ -24,6 +24,7 @@ contextBridge.exposeInMainWorld("daoFunctions", {
     saveOpenAIConversation: (data) => { dao.saveOpenAIConversation(data) },
     createFact: (data) => { dao.Fact.create(data) },
     findFactsBySingleKey: (data) => { return dao.findFactsBySingleKey(data) },
+    findFactsByKeywords: (data) => { return dao.findFactsByKeywords(data) },
 });
 
 contextBridge.exposeInMainWorld("electron", {
