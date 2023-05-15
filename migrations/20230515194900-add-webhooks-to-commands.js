@@ -35,7 +35,7 @@ It is IMPORTANT to respond with JSON only and nothing more. No comments, no note
 `,
                 description: 'Generate meme',
                 model: 'gpt-3.5-turbo',
-                webhookURL: 'https://hook.eu1.make.com/bu5hdj0c2jhk519psguv8h1z6imi788a',
+                webhookURL: 'https://hook.eu1.make.com/bu5hdj0c2jhk519psguv8h1z6imi788a', // this is sample webhook :) nothing is listening here
                 sendToWebhook: true,
                 displayWebhookResults: true,
                 createdAt: new Date(),
