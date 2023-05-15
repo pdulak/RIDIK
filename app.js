@@ -79,6 +79,27 @@ and present them in a concise, clear, and useful manner in the requested JSON fo
 ###question
 `;
 
+const responsePrompt =
+`As an AI assistant, your task is to provide informative responses to user queries based on the data provided. 
+In the {database} section is a list of relevant database records for you to utilize in constructing your response. 
+Your response should be based on this provided data or, if the data is insufficient or not available, on the best of your current knowledge.
+
+For example, if a user asks, "What is the population of New York City?" 
+and the system provides data such as "New York City population: 8.4 million", you should respond accordingly, 
+e.g., "The population of New York City is approximately 8.4 million."
+
+In the event that no data or insufficient data is provided, use your training to generate a response 
+that aligns with your current knowledge up until the cutoff date. 
+
+Remember, your ultimate aim is to provide accurate, clear, and helpful responses to all user queries, 
+relying on the provided data when possible and your training when necessary.
+
+###database
+[[database]]
+
+###question
+[[question]]`;
+
 const getCurrentCommand = () => {
     let commandContents = mainPrompt;
 
@@ -171,9 +192,13 @@ const handleFactsRecall = async (promptContents, response) => {
     const result = await openai_completion_chat({ messages });
     try {
         const parsedQuestion = JSON.parse(result?.choices[0]?.message?.content || null);
-        const allTags = parsedQuestion.tags.split(',').push(parsedQuestion.keyword);
+        const allTags = parsedQuestion.tags.split(',')
+        allTags.push(parsedQuestion.keyword);
 
-        response.facts = await window.daoFunctions.findFactsByKeywords(allTags);
+        const factsArray = await window.daoFunctions.findFactsByKeywords(allTags);
+        response.facts = factsArray.reduce((accumulator, current) => {
+            return accumulator + current.dataValues.value + '\n';
+        }, '');
         response.isQuestion = true;
         response.isInMyDatabase = response.facts.length > 0;
 
@@ -221,16 +246,17 @@ const executeMainChatProcess = async () => {
     const rememberOrQuestion = await checkIfQuestionOrSomethingToRemember();
     const messages = pullMessagesFromMainChat();
     const destinationElement = prepareDestinationElement();
+    destinationElement.ariaBusy = "true";
 
     if (rememberOrQuestion.isSomethingToRemember) {
         destinationElement.innerText = "OK, I will remember that.";
     } else if (rememberOrQuestion.isQuestion && rememberOrQuestion.isInMyDatabase) {
-        const result = rememberOrQuestion.facts.reduce((accumulator, current) => {
-            return accumulator + current.dataValues.value + '\n';
-        }, '');
-        destinationElement.innerText = "Database contents: \n" + result;
+        // adjust last element of messages - introduce data from the database
+        messages[messages.length - 1].content = responsePrompt
+            .replace('[[database]]', rememberOrQuestion.facts)
+            .replace('[[question]]', messages[messages.length - 1].content);
+        openai_completion_chat({ messages, destinationElement });
     } else {
-        destinationElement.ariaBusy = "true";
         openai_completion_chat({ messages, destinationElement });
     }
 
