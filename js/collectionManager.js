@@ -11,7 +11,6 @@ const clearCollectionFields = () => {
     Object.keys(collectionFields).forEach((key) => {
         collectionFields[key].value = '';
     });
-    collectionSaveButton.disabled = false;
 }
 
 const sliceCollection = () => {
@@ -23,26 +22,33 @@ const sliceCollection = () => {
     collectionFields.chunks.value = newText;
 }
 
-const saveCollection = () => {
+const saveCollection = async () => {
+    sliceCollection();
     const data = {
         name: collectionFields.name.value,
         source: collectionFields.source.value,
         type: collectionFields.type.value,
     };
 
-    const chunksRaw = collectionFields.chunks.value.split('[chunk]');
-    const chunks = chunksRaw.map(chunk => {
-        return {
-            collectionId: 1,
-            type: 'chunk',
-            value: chunk.trim(),
-        }
-    });
+    if (collectionFields.name.value.trim() === '') {
+        // skip
+    } else {
+        const collection = await window.daoFunctions.saveCollectionItem(data);
+        const theID = collection.dataValues.id;
 
-    console.log('data', data);
-    console.log('chunks', chunks);
+        const chunksRaw = collectionFields.chunks.value.split('[chunk]');
+        const chunks = chunksRaw.map(chunk => {
+            return {
+                collectionId: theID,
+                type: 'chunk',
+                value: chunk.trim(),
+            }
+        });
 
-    collectionSaveButton.disabled = true;
+        window.daoFunctions.bulkCreateChunks(chunks);
+
+        clearCollectionFields();
+    }
 }
 
 export const collectionManager = () => {

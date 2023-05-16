@@ -1,6 +1,7 @@
-const { sequelize, Commands, SysConfig, Archive, Fact } = require('../../models');
+const { sequelize, Commands, SysConfig, Archive, Fact, Collection, Chunk } = require('../../models');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const {v4} = require("uuid");
 
 function Dao() {
 
@@ -73,6 +74,34 @@ function Dao() {
         });
     };
 
+    const saveCollectionItem = async (data) => {
+        return await Collection.create(data);
+    }
+
+    const bulkCreateChunks = async (data) => {
+        const adjustedData = data.map(obj => {
+            return {
+                ...obj,
+                uuid: v4(),
+            };
+        });
+        return await Chunk.bulkCreate(adjustedData);
+    }
+
+    const fillChunkWithUUID = () => {
+        Chunk.findAll({
+            where: {
+                uuid: null
+            }
+        }).then(chunks => {
+            chunks.forEach(chunk => {
+                chunk.update({
+                    uuid: v4(),
+                });
+            });
+        });
+    }
+
     return {
         checkConnection,
         saveOpenAIConversation,
@@ -82,6 +111,8 @@ function Dao() {
         Fact,
         findFactsBySingleKey,
         findFactsByKeywords,
+        saveCollectionItem,
+        bulkCreateChunks,
     }
 }
 
