@@ -18,6 +18,7 @@
                 </li>
             </ul>
             <ul>
+                <li><a href="#" data-section="collection" >Collection</a></li>
                 <li><a href="#" data-section="main" >Tasks</a></li>
                 <li><a href="#" data-section="openai" >Assistant</a></li>
             </ul>
@@ -49,6 +50,28 @@
                     <button id="reset-chat" class="outline">X</button>
                 </div>
             </div>
+        </section>
+        <section id="collection" class="dynamic-section">
+            <a href="#" role="button" id="save-collection">Save</a>
+            <a href="#" role="button" id="slice-collection">Slice</a>
+            <a href="#" role="button" id="clear-collection">Clear form</a>
+
+            <label for="collection-name">Collection Name</label>
+            <input type="text" name="collection-name" id="collection-name" />
+            <label for="collection-source">Source</label>
+            <input type="text" name="collection-source" id="collection-source" />
+            <label for="collection-type">Type</label>
+            <select name="collection-type" id="collection-type">
+                <option value="Book">Book</option>
+                <option value="Article">Article</option>
+                <option value="Notes">Notes</option>
+                <option value="Quote">Quote</option>
+                <option value="Other">Other</option>
+            </select>
+            <label for="collection-contents">Contents</label>
+            <textarea name="collection-contents" id="collection-contents" rows="10"></textarea>
+            <label for="collection-chunks">Chunks</label>
+            <textarea name="collection-chunks" id="collection-chunks" rows="10"></textarea>
         </section>
     </main>
     <dialog id="messages-modal">
