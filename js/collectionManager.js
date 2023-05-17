@@ -51,8 +51,24 @@ const saveCollection = async () => {
     }
 }
 
+const loadEmbedding = async () => {
+    const embeddingDiv = document.getElementById('embedding-elements');
+    const chunksToEmbed = await window.daoFunctions.getChunksToEmbed();
+
+    // for each element of chunksToEmbed create div with id and text
+    chunksToEmbed.forEach(chunk => {
+        const newDiv = document.createElement('div');
+        newDiv.dataset.id = chunk.dataValues.id;
+        newDiv.dataset.uuid = chunk.dataValues.uuid;
+        newDiv.innerText = chunk.dataValues.value;
+        embeddingDiv.appendChild(newDiv);
+    });
+}
+
 export const collectionManager = () => {
     document.getElementById('clear-collection').addEventListener('click', clearCollectionFields);
     document.getElementById('slice-collection').addEventListener('click', sliceCollection);
     collectionSaveButton.addEventListener('click', saveCollection);
+
+    document.getElementById('load-embedding').addEventListener('click', loadEmbedding);
 }

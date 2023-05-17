@@ -52,26 +52,38 @@
             </div>
         </section>
         <section id="collection" class="dynamic-section">
-            <a href="#" role="button" id="save-collection">Save</a>
-            <a href="#" role="button" id="slice-collection">Slice</a>
-            <a href="#" role="button" id="clear-collection">Clear form</a>
+            <details>
+                <summary>Embedding -> Pinecone</summary>
+                <div>
+                    <a href="#" role="button" id="load-embedding">Load elements to embed</a>
+                    <div id="embedding-elements"></div>
+                </div>
+            </details>
+            <details>
+                <summary>Add Element to Collection</summary>
+                <div>
+                    <a href="#" role="button" id="save-collection">Save</a>
+                    <a href="#" role="button" id="slice-collection">Slice</a>
+                    <a href="#" role="button" id="clear-collection">Clear form</a>
 
-            <label for="collection-name">Collection Name</label>
-            <input type="text" name="collection-name" id="collection-name" />
-            <label for="collection-source">Source</label>
-            <input type="text" name="collection-source" id="collection-source" />
-            <label for="collection-type">Type</label>
-            <select name="collection-type" id="collection-type">
-                <option value="Book">Book</option>
-                <option value="Article">Article</option>
-                <option value="Notes">Notes</option>
-                <option value="Quote">Quote</option>
-                <option value="Other">Other</option>
-            </select>
-            <label for="collection-contents">Contents</label>
-            <textarea name="collection-contents" id="collection-contents" rows="10"></textarea>
-            <label for="collection-chunks">Chunks</label>
-            <textarea name="collection-chunks" id="collection-chunks" rows="10"></textarea>
+                    <label for="collection-name">Collection Name</label>
+                    <input type="text" name="collection-name" id="collection-name" />
+                    <label for="collection-source">Source</label>
+                    <input type="text" name="collection-source" id="collection-source" />
+                    <label for="collection-type">Type</label>
+                    <select name="collection-type" id="collection-type">
+                        <option value="Book">Book</option>
+                        <option value="Article">Article</option>
+                        <option value="Notes">Notes</option>
+                        <option value="Quote">Quote</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <label for="collection-contents">Contents</label>
+                    <textarea name="collection-contents" id="collection-contents" rows="10"></textarea>
+                    <label for="collection-chunks">Chunks</label>
+                    <textarea name="collection-chunks" id="collection-chunks" rows="10"></textarea>
+                </div>
+            </details>
         </section>
     </main>
     <dialog id="messages-modal">

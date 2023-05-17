@@ -114,3 +114,10 @@ body > footer {
 .openai-footer-container button  {
     width: 66px;
 }
+
+#embedding-elements div {
+    border: 1px solid var(--form-element-border-color);
+    padding: 5px;
+    margin: 5px;
+    border-radius: var(--border-radius);
+}

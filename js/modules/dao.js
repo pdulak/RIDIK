@@ -102,6 +102,14 @@ function Dao() {
         });
     }
 
+    const getChunksToEmbed = async () => {
+        return await Chunk.findAll({
+            where: {
+                externalId: null
+            }
+        });
+    }
+
     return {
         checkConnection,
         saveOpenAIConversation,
@@ -113,6 +121,7 @@ function Dao() {
         findFactsByKeywords,
         saveCollectionItem,
         bulkCreateChunks,
+        getChunksToEmbed,
     }
 }
 

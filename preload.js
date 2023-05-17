@@ -27,6 +27,7 @@ contextBridge.exposeInMainWorld("daoFunctions", {
     findFactsByKeywords: (data) => { return dao.findFactsByKeywords(data) },
     saveCollectionItem: (data) => { return dao.saveCollectionItem(data) },
     bulkCreateChunks: (data) => { return dao.bulkCreateChunks(data) },
+    getChunksToEmbed: () => { return dao.getChunksToEmbed() },
 });
 
 contextBridge.exposeInMainWorld("electron", {
