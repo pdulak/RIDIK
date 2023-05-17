@@ -65,34 +65,58 @@ const loadEmbedding = async () => {
         newDiv.dataset.id = chunk.dataValues.id;
         newDiv.dataset.uuid = chunk.dataValues.uuid;
         newDiv.innerText = chunk.dataValues.value;
+        newDiv.classList.add('ready-to-embed');
         embeddingDiv.appendChild(newDiv);
     });
 }
 
-const executeEmbedding = async () => {
-    const firstDiv = embeddingDiv.firstElementChild;
-    const result = await openai_embedding(firstDiv.innerText);
-    const vectors = result.data[0].embedding;
-    initialize(config.pineconeApiKey, config.pineconeUrl);
-    const pineResult = await pineconeUpsert({
-        vectors: [
-            {
-                id: firstDiv.dataset.uuid,
-                values: vectors,
-                metadata: {
-                    "type": "chunk",
+const makeChunkDisappear = (chunkDiv) => {
+    chunkDiv.classList.add('success');
+    chunkDiv.ariaBusy = 'false';
+    chunkDiv.style.transition = "opacity 600ms";
+    chunkDiv.style.opacity = "0";
+    setTimeout(() => {
+        chunkDiv.style.display = "none";
+    }, 600);
+}
+
+const embedAndHide = (chunkDiv) => {
+    chunkDiv.classList.remove('ready-to-embed');
+    chunkDiv.ariaBusy = 'true';
+
+    openai_embedding(chunkDiv.innerText)
+        .then(result => {
+            const vectors = result.data[0].embedding;
+            pineconeUpsert({
+                vectors: [
+                    {
+                        id: chunkDiv.dataset.uuid,
+                        values: vectors,
+                        metadata: {
+                            "type": "chunk",
+                        }
+                    }
+                ],
+                namespace: "chunks"
+            }).then(pineResult => {
+                if (pineResult.upsertedCount === 1) {
+                    makeChunkDisappear(chunkDiv);
+                    window.daoFunctions.setChunkAsEmbedded({
+                        id: chunkDiv.dataset.id,
+                        externalId: JSON.stringify(vectors)
+                    });
                 }
-            }
-        ],
-        namespace: "chunks"
-    });
-    if (pineResult.upsertedCount === 1) {
-        firstDiv.classList.add('success');
-        const updateResult = window.daoFunctions.setChunkAsEmbedded({
-            id: firstDiv.dataset.id,
-            externalId: JSON.stringify(vectors)
+            });
         });
-    }
+};
+
+const executeEmbedding = async () => {
+    const allReadyToEmbed = embeddingDiv.querySelectorAll('div.ready-to-embed');
+    initialize(config.pineconeApiKey, config.pineconeUrl);
+
+    allReadyToEmbed.forEach(chunkDiv => {
+        embedAndHide(chunkDiv);
+    });
 }
 
 export const collectionManager = () => {
