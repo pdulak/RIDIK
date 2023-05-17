@@ -6,7 +6,7 @@ const collectionFields = {
     chunks: document.getElementById('collection-chunks'),
 };
 import { openai_embedding } from './modules/openai.js';
-
+import { initialize, pineconeUpsert } from './modules/pinecone.js';
 const collectionSaveButton = document.getElementById('save-collection');
 const embeddingDiv = document.getElementById('embedding-elements');
 
@@ -57,6 +57,7 @@ const saveCollection = async () => {
 
 const loadEmbedding = async () => {
     const chunksToEmbed = await window.daoFunctions.getChunksToEmbed();
+    embeddingDiv.innerHTML = '';
 
     // for each element of chunksToEmbed create div with id and text
     chunksToEmbed.forEach(chunk => {
@@ -71,8 +72,27 @@ const loadEmbedding = async () => {
 const executeEmbedding = async () => {
     const firstDiv = embeddingDiv.firstElementChild;
     const result = await openai_embedding(firstDiv.innerText);
-    console.log(result.data[0].embedding);
-
+    const vectors = result.data[0].embedding;
+    initialize(config.pineconeApiKey, config.pineconeUrl);
+    const pineResult = await pineconeUpsert({
+        vectors: [
+            {
+                id: firstDiv.dataset.uuid,
+                values: vectors,
+                metadata: {
+                    "type": "chunk",
+                }
+            }
+        ],
+        namespace: "chunks"
+    });
+    if (pineResult.upsertedCount === 1) {
+        firstDiv.classList.add('success');
+        const updateResult = window.daoFunctions.setChunkAsEmbedded({
+            id: firstDiv.dataset.id,
+            externalId: JSON.stringify(vectors)
+        });
+    }
 }
 
 export const collectionManager = () => {

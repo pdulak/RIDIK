@@ -121,3 +121,7 @@ body > footer {
     margin: 5px;
     border-radius: var(--border-radius);
 }
+
+#embedding-elements div.success {
+    background-color: #2e7d32;
+}

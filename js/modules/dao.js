@@ -110,6 +110,14 @@ function Dao() {
         });
     }
 
+    const setChunkAsEmbedded = async (data) => {
+        return Chunk.findByPk(data.id).then(chunk => {
+            chunk.update({
+                externalId: data.externalId,
+            });
+        });
+    }
+
     return {
         checkConnection,
         saveOpenAIConversation,
@@ -122,6 +130,7 @@ function Dao() {
         saveCollectionItem,
         bulkCreateChunks,
         getChunksToEmbed,
+        setChunkAsEmbedded,
     }
 }
 
