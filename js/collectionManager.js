@@ -5,7 +5,11 @@ const collectionFields = {
     contents: document.getElementById('collection-contents'),
     chunks: document.getElementById('collection-chunks'),
 };
+import { openai_embedding } from './modules/openai.js';
+
 const collectionSaveButton = document.getElementById('save-collection');
+const embeddingDiv = document.getElementById('embedding-elements');
+
 
 const clearCollectionFields = () => {
     Object.keys(collectionFields).forEach((key) => {
@@ -52,7 +56,6 @@ const saveCollection = async () => {
 }
 
 const loadEmbedding = async () => {
-    const embeddingDiv = document.getElementById('embedding-elements');
     const chunksToEmbed = await window.daoFunctions.getChunksToEmbed();
 
     // for each element of chunksToEmbed create div with id and text
@@ -65,10 +68,18 @@ const loadEmbedding = async () => {
     });
 }
 
+const executeEmbedding = async () => {
+    const firstDiv = embeddingDiv.firstElementChild;
+    const result = await openai_embedding(firstDiv.innerText);
+    console.log(result.data[0].embedding);
+
+}
+
 export const collectionManager = () => {
     document.getElementById('clear-collection').addEventListener('click', clearCollectionFields);
     document.getElementById('slice-collection').addEventListener('click', sliceCollection);
     collectionSaveButton.addEventListener('click', saveCollection);
 
     document.getElementById('load-embedding').addEventListener('click', loadEmbedding);
+    document.getElementById('execute-embedding').addEventListener('click', executeEmbedding);
 }

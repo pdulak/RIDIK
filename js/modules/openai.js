@@ -71,6 +71,25 @@ export const openai_completion_chat = async ({ messages, destinationElement = nu
 }
 
 
+export const openai_embedding = async (textToEmbed) => {
+    const dataToSend = {
+        model: "text-embedding-ada-002",
+        input: textToEmbed,
+    }
+    const response = await fetch(`${openaiConfig.url}/v1/embeddings`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${openaiConfig.apiKey}`,
+            "OpenAI-Organization": openaiConfig.organization,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataToSend)
+    });
+    const json = await response.json();
+    return json;
+}
+
+
 const openai_json_call = async (endpoint, dataToSend, destinationElement = null) => {
     const brain = document.getElementById('brain');
     if (brain) brain.ariaBusy = "true";
