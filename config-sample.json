@@ -2,5 +2,7 @@
   "zadaniaApiKey" : "api-key",
   "zadaniaUrl" : "url-to-tasks",
   "openaiApiKey" : "sk-something",
-  "openaiOrganizationID" : "org-something"
+  "openaiOrganizationID" : "org-something",
+  "pineconeApiKey" : "pineconeApiKey",
+  "pineconeUrl" : "https://something.pinecone.io/"
 }
