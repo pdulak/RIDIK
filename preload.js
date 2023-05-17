@@ -29,6 +29,7 @@ contextBridge.exposeInMainWorld("daoFunctions", {
     bulkCreateChunks: (data) => { return dao.bulkCreateChunks(data) },
     getChunksToEmbed: () => { return dao.getChunksToEmbed() },
     setChunkAsEmbedded: (data) => { return dao.setChunkAsEmbedded(data) },
+    findChunksByUUID: (data) => { return dao.findChunksByUUID(data) },
 });
 
 contextBridge.exposeInMainWorld("electron", {

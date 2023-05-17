@@ -21,3 +21,17 @@ export const pineconeUpsert = async (data) => {
     const json = await response.json();
     return json;
 }
+
+export const pineconeQuery = async (data) => {
+    const response = await fetch(`${pineconeConfig.url}query`, {
+        method: "POST",
+        headers: {
+            "Api-Key": pineconeConfig.apiKey,
+            "accept": "application/json",
+            "content-type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    const json = await response.json();
+    return json;
+}

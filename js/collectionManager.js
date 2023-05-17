@@ -6,7 +6,7 @@ const collectionFields = {
     chunks: document.getElementById('collection-chunks'),
 };
 import { openai_embedding } from './modules/openai.js';
-import { initialize, pineconeUpsert } from './modules/pinecone.js';
+import { initialize, pineconeUpsert, pineconeQuery } from './modules/pinecone.js';
 const collectionSaveButton = document.getElementById('save-collection');
 const embeddingDiv = document.getElementById('embedding-elements');
 
@@ -112,18 +112,54 @@ const embedAndHide = (chunkDiv) => {
 
 const executeEmbedding = async () => {
     const allReadyToEmbed = embeddingDiv.querySelectorAll('div.ready-to-embed');
-    initialize(config.pineconeApiKey, config.pineconeUrl);
 
     allReadyToEmbed.forEach(chunkDiv => {
         embedAndHide(chunkDiv);
     });
 }
 
+const queryEmbedding = async () => {
+    const queryElement = document.getElementById('query-to-pinecone');
+    const query = queryElement.value;
+    const resultsDiv = document.getElementById('query-results');
+    resultsDiv.innerHTML = '';
+    resultsDiv.ariaBusy = 'true';
+
+    queryElement.ariaBusy = 'true';
+    openai_embedding(query)
+        .then(result => {
+            const vector = result.data[0].embedding;
+            pineconeQuery({
+                namespace: "chunks",
+                topK: 10,
+                includeMetadata: true,
+                vector: vector,
+            }).then(pineResult => {
+                if (pineResult.matches.length) {
+                    const matches = pineResult.matches;
+                    window.daoFunctions.findChunksByUUID(matches)
+                        .then(chunks => {
+                            chunks.forEach(chunk => {
+                                const newDiv = document.createElement('div');
+                                const match = matches.find(match => match.id === chunk.dataValues.uuid);
+                                newDiv.innerText = `[${match.score}] - ${chunk.dataValues.value}`;
+                                resultsDiv.appendChild(newDiv);
+                            });
+                            resultsDiv.ariaBusy = 'false';
+                        });
+                }
+            });
+        });
+}
+
 export const collectionManager = () => {
+    initialize(config.pineconeApiKey, config.pineconeUrl);
     document.getElementById('clear-collection').addEventListener('click', clearCollectionFields);
     document.getElementById('slice-collection').addEventListener('click', sliceCollection);
     collectionSaveButton.addEventListener('click', saveCollection);
 
     document.getElementById('load-embedding').addEventListener('click', loadEmbedding);
     document.getElementById('execute-embedding').addEventListener('click', executeEmbedding);
+
+    document.getElementById('query-embedding').addEventListener('click', queryEmbedding);
 }

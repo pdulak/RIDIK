@@ -118,6 +118,18 @@ function Dao() {
         });
     }
 
+    const findChunksByUUID = async (pineconeResults) => {
+        return await Chunk.findAll({
+            where: {
+                uuid: {
+                    [Op.or]: pineconeResults.map(result => ({
+                        [Op.like]: result.id
+                    }))
+                }
+            }
+        });
+    };
+
     return {
         checkConnection,
         saveOpenAIConversation,
@@ -131,6 +143,7 @@ function Dao() {
         bulkCreateChunks,
         getChunksToEmbed,
         setChunkAsEmbedded,
+        findChunksByUUID,
     }
 }
 

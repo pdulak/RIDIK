@@ -53,6 +53,15 @@
         </section>
         <section id="collection" class="dynamic-section">
             <details>
+                <summary>Query -> Pinecone</summary>
+                <div>
+                    <label for="query-to-pinecone">Query</label>
+                    <input type="text" name="query-to-pinecone" id="query-to-pinecone">
+                    <a href="#" role="button" id="query-embedding">Embed and query</a>
+                    <div id="query-results"></div>
+                </div>
+            </details>
+            <details>
                 <summary>Embedding -> Pinecone</summary>
                 <div>
                     <a href="#" role="button" id="load-embedding">Load elements to embed</a>
