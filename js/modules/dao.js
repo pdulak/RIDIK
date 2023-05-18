@@ -1,4 +1,4 @@
-const { sequelize, Commands, SysConfig, Archive, Fact, Collection, Chunk } = require('../../models');
+const { sequelize, Commands, SysConfig, Archive, Fact, Collection, Chunk, Task, TaskStep } = require('../../models');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const {v4} = require("uuid");
@@ -130,6 +130,18 @@ function Dao() {
         });
     };
 
+    const findOneUnprocessedTask = async () => {
+        return await Task.findOne({
+            where: {
+                is_done: null
+            }
+        });
+    }
+
+    const createNewTask = async (data) => {
+        return await Task.create(data);
+    }
+
     return {
         checkConnection,
         saveOpenAIConversation,
@@ -144,6 +156,8 @@ function Dao() {
         getChunksToEmbed,
         setChunkAsEmbedded,
         findChunksByUUID,
+        findOneUnprocessedTask,
+        createNewTask,
     }
 }
 

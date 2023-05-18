@@ -30,6 +30,8 @@ contextBridge.exposeInMainWorld("daoFunctions", {
     getChunksToEmbed: () => { return dao.getChunksToEmbed() },
     setChunkAsEmbedded: (data) => { return dao.setChunkAsEmbedded(data) },
     findChunksByUUID: (data) => { return dao.findChunksByUUID(data) },
+    findOneUnprocessedTask: () => { return dao.findOneUnprocessedTask() },
+    createNewTask: (data) => { return dao.createNewTask(data) },
 });
 
 contextBridge.exposeInMainWorld("electron", {
