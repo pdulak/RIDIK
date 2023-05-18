@@ -117,10 +117,12 @@ module.exports = {
 
 ### main database table
 - id
-- initial data
+- task data
 - current status
 - task type (defines what steps will be performed)
 - is done?
+
+`npx sequelize-cli model:generate --name Task --attributes data:string,status:string,type:string,is_done:boolean`
 
 ### task steps
 - task id
@@ -129,6 +131,8 @@ module.exports = {
 - step results
 - step status
 - is done?
+
+`npx sequelize-cli model:generate --name TaskStep --attributes task_id:integer,type:string,prompt:string,results:string,status:string,is_done:boolean`
 
 ### sample multi-step task: write an article in a given topic
 - ask for topic
