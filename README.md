@@ -17,6 +17,8 @@ Hey there! Just wanted to let you know that I'm not really a JS developer, so I'
   - [X] table with system settings
   - [X] table with commands
   - ???
+- [ ] ability to stop current conversation
+- [ ] better way of handling inforamation about conversation status - is it waiting for response, is it waiting for user to select action, etc.
 - [ ] function to prepare data from other sources - remove HTML tags, excess chars, special chars...
 - [ ] unfluff parsing of HTML pages
 - [ ] library of prompt additions (snippets) such as: `Acknowledge this by just saying "..." and nothing more.` or `Return JSON object, only JSON object and nothing more`
@@ -110,4 +112,39 @@ module.exports = {
 
 ##### Step 3 - run migration
 `npx sequelize-cli db:migrate`
+
+## Multi-step task notes
+
+### main database table
+- id
+- initial data
+- current status
+- task type (defines what steps will be performed)
+- is done?
+
+### task steps
+- task id
+- step type
+- step prompt 
+- step results
+- step status
+- is done?
+
+### sample multi-step task: write an article in a given topic
+- ask for topic
+- generate contents in points
+- generate a few sentences for each point
+- compile into a single article
+
+### the above multi-step task logic
+- is there a task in progress?
+  - if yes, is it done?
+    - if yes, start a new task
+    - if no, continue with the current task
+  - if no, start a new task
+- first step: ask for topic
+- second step: generate contents in points
+- third step: generate steps based on contents points
+- fourth step: generate a few sentences for each point
+- fifth step: compile into a single article
 
