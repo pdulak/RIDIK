@@ -18,6 +18,7 @@
                 </li>
             </ul>
             <ul>
+                <li><a href="#" data-section="article" >Article</a></li>
                 <li><a href="#" data-section="collection" >Collection</a></li>
                 <li><a href="#" data-section="main" >Tasks</a></li>
                 <li><a href="#" data-section="openai" >Assistant</a></li>
@@ -94,6 +95,12 @@
                     <textarea name="collection-chunks" id="collection-chunks" rows="10"></textarea>
                 </div>
             </details>
+        </section>
+        <section id="article" class="dynamic-section">
+            <label for="article-topic">Provide topic of the article</label>
+            <input type="text" name="article-topic" id="article-topic">
+            <a href="#" role="button" id="generate-article">Generate an article</a>
+            <div id="query-results"></div>
         </section>
     </main>
     <dialog id="messages-modal">

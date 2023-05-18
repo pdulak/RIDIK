@@ -11,12 +11,16 @@ showMessages.addEventListener('click', () => {
     popup.setAttribute('open', 'true');
 });
 
-export const addMessage = (message) => {
+export const addMessageInBackground = (message) => {
     const messageElement = document.createElement('p');
     const currentDate = new Date().toISOString().replace("T", " ");
 
     messageElement.textContent = currentDate + ": " + message;
     popupContent.prepend(messageElement);
+}
+
+export const addMessage = (message) => {
+    addMessageInBackground(message);
 
     // Show the popup when a new message is added
     popup.setAttribute('open', 'true');

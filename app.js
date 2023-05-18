@@ -1,6 +1,7 @@
 import { initialize, openai_completion_chat } from "./js/modules/openai.js";
 import { taskSolver } from "./js/tasksSolutions.js";
 import { collectionManager } from "./js/collectionManager.js";
+import { articleAuthor } from "./js/articleAuthor.js";
 
 initialize(config.openaiApiKey, config.openaiOrganizationID);
 
@@ -371,6 +372,7 @@ const initializeApp = async () => {
     setCommandsFromDatabase();
     scrollChatToBottom();
     collectionManager();
+    articleAuthor();
 }
 
 initializeApp();
