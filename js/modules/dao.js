@@ -142,6 +142,30 @@ function Dao() {
         return await Task.create(data);
     }
 
+    const updateTask = async (data) => {
+        return await Task.findByPk(data.id).then(task => {
+            task.update(data);
+        });
+    }
+
+    const createTaskStep = async (data) => {
+        return await TaskStep.create(data);
+    }
+
+    const updateTaskStep = async (data) => {
+        return await TaskStep.findByPk(data.id).then(taskStep => {
+            taskStep.update(data);
+        });
+    }
+
+    const getTaskStepsForTask = async (taskId) => {
+        return await TaskStep.findAll({
+            where: {
+                task_id: taskId
+            }
+        });
+    }
+
     return {
         checkConnection,
         saveOpenAIConversation,
@@ -158,6 +182,10 @@ function Dao() {
         findChunksByUUID,
         findOneUnprocessedTask,
         createNewTask,
+        updateTask,
+        createTaskStep,
+        updateTaskStep,
+        getTaskStepsForTask,
     }
 }
 
